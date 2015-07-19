@@ -1,5 +1,8 @@
 {
   "list": [
-    "Quest for the Royal Jelly"
+    {
+      "name": "Quest for the Royal Jelly",
+      "platforms": [ "Windows" ]
+    }
   ]
 }

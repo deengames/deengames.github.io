@@ -21,7 +21,7 @@ class Main
     games = JSON.parse(File.read(DATABASE_FILE))
     games = games['list']
     games.each do |g|
-      puts "#{g} => #{game_name_to_token(g)}"
+      puts "#{g['name']} => #{game_name_to_token(g['name'])}, #{g['platforms']}"
     end
   end
 
