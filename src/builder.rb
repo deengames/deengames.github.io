@@ -71,7 +71,16 @@ class Builder
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
 
-      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a>"
+      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a><br />"
+      g['platforms'].each do |p|
+        # TODO: switch to SVGs for these
+        p.keys.each do |platform|
+          html = "#{html}<img src='images/#{platform}.png' />"
+          binary_path = p[platform]
+          binary_path = "downloads/#{platform}/#{binary_path}" if ['windows', 'linux'].include?(platform)
+          puts "For #{g['name']}, #{platform} is accessible from #{binary_path}"
+        end
+      end
 
       if (is_featured)
         featured_html = "#{featured_html}#{html}"
