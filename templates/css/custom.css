@@ -1,3 +1,10 @@
 body {
   padding-top: 70px; /* space between navbar and content */
+  background: #def;
+}
+
+#main {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
