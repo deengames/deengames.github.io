@@ -4,6 +4,7 @@ require 'kramdown'
 
 class Builder
 
+  OUTPUT_DIR = 'bin'
   DATA_DIR = 'data'
   DATABASE_FILE = "#{DATA_DIR}/games.yaml"
 
@@ -40,7 +41,7 @@ class Builder
 
   def generate_site
     # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
-    FileUtils.cp_r "#{TEMPLATE_DIRECTORY}/.", '.'
+    FileUtils.cp_r "#{TEMPLATE_DIRECTORY}/.", OUTPUT_DIR
     TEMPLATE_EXCLUSIONS.each do |exclusion|
       FileUtils.rm_rf exclusion
     end
@@ -57,7 +58,7 @@ class Builder
       to_html = Kramdown::Document.new(markdown).to_html
       html = @master_page_html.sub(CONTENT_PLACEHOLDER, to_html)
       page_name = get_page_name(p)
-      File.write("#{page_name}.html", html)
+      File.write("#{OUTPUT_DIR}/#{page_name}.html", html)
     end
 
     puts "Generated #{@pages.count} pages."
@@ -68,7 +69,7 @@ class Builder
   # using/abusing this by calling it index.html
   def generate_master_page
     # Get a list of all static pages. We need links for our header.
-    index_page = File.read(INDEX_PAGE)
+    index_page = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
     @pages = Dir.glob("#{STATIC_PAGES_DIR}/*.md")
     navbar_template = File.read(NAVBAR_LINK_SNIPPET)
     links_html = ''

@@ -6,15 +6,22 @@ task :build do
   Builder.new.build
 end
 
+desc "Delete all the previously published artifacts"
 task :clean do
-   Dir.glob('templates/*').each do |dir|
-     dir = dir['templates/'.length, dir.length]
-     FileUtils.rm_rf dir
+   Dir.glob('bin/**/*').each do |f|
+     f = f['bin/'.length, f.length]
+     FileUtils.rm_rf f
    end
 
+   FileUtils.rm_rf 'bin'
    Dir.glob("*.html").each { |f| FileUtils.rm(f) }
    puts 'Cleaned.'
 end
 
+desc "Copies all the built binaries to the root directory"
+task :publish do
+  FileUtils.cp_r 'bin/.', '.'
+end
+
 # set default task: build the website
-task :default => ['clean', 'build']
+task :default => ['clean', 'build', 'publish']
