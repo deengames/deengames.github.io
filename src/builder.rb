@@ -9,6 +9,7 @@ class Builder
   DATABASE_FILE = "#{DATA_DIR}/games.yaml"
 
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
+  IMAGES_DIR = "#{DATA_DIR}/images"
   TEMPLATE_DIRECTORY = 'templates'
   # Copy the template dir. But not these items.
   TEMPLATE_EXCLUSIONS = ['snippets']
@@ -16,7 +17,9 @@ class Builder
   INDEX_PAGE = 'index.html'
   NAVBAR_LINKS_PLACEHOLDER = '<!-- DG navbar links -->'
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
+  JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
   CONTENT_PLACEHOLDER = '<!-- DG content -->'
+  IMAGE_SIZES = { :featured => '500x260', :regular => '300x156'}
 
   def build
     start = Time.new
@@ -47,10 +50,46 @@ class Builder
     end
 
     generate_master_page
-    generate_pages
+    generate_static_pages
+    generate_game_entries
   end
 
-  def generate_pages
+  # Generates entries for the front page
+  def generate_game_entries
+    featured_html = ''
+    regular_html = ''
+
+    @games.each do |g|
+      is_featured = g == @games[0] || g == @games[1]
+      size = is_featured ? IMAGE_SIZES[:featured] : IMAGE_SIZES[:regular]
+      # Regardless of extension, add size
+      filename = g['screenshot']
+      ['png', 'jpg'].each do |format|
+        filename.sub!(".#{format}", "-#{size}.#{format}")
+      end
+
+      game_image = "#{IMAGES_DIR}/#{filename}"
+      raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
+
+      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a>"
+
+      if (is_featured)
+        featured_html = "#{featured_html}#{html}"
+      else
+        regular_html = "#{regular_html}#{html}"
+      end
+    end
+
+    featured_html = File.read(JUMBOTRON_SNIPPET).sub('@content', featured_html)
+    html = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
+    html = @master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{html}")
+    File.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
+    FileUtils.cp_r "#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images"
+  end
+
+  # Generates static pages from data/static_pages/*.md
+  # Converts them into HTML, links them in the header
+  def generate_static_pages
     raise 'Pages are not defined!' if @pages.nil?
 
     @pages.each do |p|
@@ -84,9 +123,6 @@ class Builder
     end
 
     @master_page_html = index_page.gsub(NAVBAR_LINKS_PLACEHOLDER, links_html)
-
-    # TODO: make the real index page
-    FileUtils.rm "#{OUTPUT_DIR}/#{INDEX_PAGE}"
   end
 
    # page file: eg. data/pages/privacy_policy.md
