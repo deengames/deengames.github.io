@@ -70,7 +70,8 @@ class Builder
   def generate_master_page
     # Get a list of all static pages. We need links for our header.
     index_page = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
-    @pages = Dir.glob("#{STATIC_PAGES_DIR}/*.md")
+    # Naively, sort alphabetically. That usually makes sense.
+    @pages = Dir.glob("#{STATIC_PAGES_DIR}/*.md").sort
     navbar_template = File.read(NAVBAR_LINK_SNIPPET)
     links_html = ''
 
