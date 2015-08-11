@@ -1,0 +1,81 @@
+# Privacy Policy
+
+Last updated: May 8, 2012
+
+Deen Games Entertainment Ltd Privacy Policy
+
+Deen Games Entertainment Ltd ("Deen Games"), its parent and its subsidiaries respect the privacy rights of our users and are committed to protecting the information collected through its online products, online services and websites including, but not limited to Deen Games' games (together "Services"). Deen Games has adopted this privacy policy ("Privacy Policy") to explain how Deen Games collects, stores, and uses the information collected in connection with Deen Games' Services.
+
+Should you have any questions relating to this Privacy Policy, please contact us at privacy@deengames.com.
+
+BY INSTALLING, USING, REGISTERING TO OR OTHERWISE ACCESSING THE SERVICES, YOU AGREE TO THIS PRIVACY POLICY AND GIVE AN EXPLICIT AND INFORMED CONSENT TO THE PROCESSING OF YOUR PERSONAL DATA IN ACCORDANCE WITH THIS PRIVACY POLICY. IF YOU DO NOT AGREE TO THIS PRIVACY POLICY, PLEASE DO NOT INSTALL, USE, REGISTER TO OR OTHERWISE ACCESS THE SERVICES. Deen Games reserves the right to modify this Privacy Policy at reasonable times, so please review it frequently. If Deen Games makes material or significant changes to this Privacy Policy, Deen Games may post a notice on Deen Games' website along with the updated Privacy Policy. Your continued use of Services will signify your acceptance of the changes to this Privacy Policy.
+
+## Non-personal data
+
+For purposes of this Privacy Policy, "non-personal data" means information that does not directly identify you. Additionally, non-personal data means "aggregate" and "de-personalized" information, which is data Deen Games collects about the use of Deen Games Services, from which any personally identifiable data has been removed.
+
+Deen Games may use tools or third party analytical software to automatically collect and use certain non-personal data that does not directly enable Deen Games to identify you. The types of non-personal data Deen Games may collect and use include, but are not limited to: (i) device properties, including, but not limited to unique device identifier or other device identifier ("UDID"); (ii) device software platform and firmware; (iii) mobile phone carrier; (iv) geographical data such as zip code, area code and location; (v) game score and achievements; (vi) other non-personal data as reasonably required by Deen Games to enhance the Services and other Deen Games products and services.
+
+Deen Games may use and disclose to Deen Games' partners and contractors the collected non-personal data for purposes of analyzing usage of the Services, advertisement serving, managing and providing the Services and to further develop the Services and other Deen Games services and products.
+
+You recognize and agree that the analytics companies utilized by Deen Games may combine the information collected with other information they have independently collected from other services or products relating to your activities. These companies collect and use information under their own privacy policies.
+
+## Ad Serving Technology
+
+Deen Games reserves the right to use and disclose the collected non-personal data for purposes of advertisement by Deen Games or Deen Games' partners and contractors. Deen Games may employ third party ad serving technologies that use certain methods to collect information as a result of ad serving through Services. Deen Games or third parties operating the ad serving technology may use demographic and location information as well as information logged from your hardware or device to ensure that appropriate advertising is presented within the Service. Deen Games or third parties may collect and use data for this purpose including, but not limited to IP address (including for purposes of determining your approximate geographic location), UDID, software, applications, hardware, browser information, internet and on-line usage information and in-game information. The foregoing data may be used and disclosed in accordance with this Privacy Policy and the privacy policy of the company providing the ad serving technology.
+
+You recognize and agree that the advertising companies who deliver ads for Deen Games may combine the information collected with other information they have independently collected from other services or products. These companies collect and use information under their own privacy policies. These ad serving technologies are integrated into Services; if you do not want to be subject to this technology, do not use or access Services. Although Deen Games takes commercially reasonable steps to instruct such advertising companies to comply with the terms and conditions of this Privacy Policy, Deen Games does not have access to or control of third party technologies.
+
+## Personal Data
+
+For purposes of this Privacy Policy, "personal data" means personally identifiable information that specifically identifies you as an individual.
+
+Likely situations when you make personal data available to Deen Games include, but are not limited to: (i) registration for Services, contests and special events; (ii) accessing Services using a third party ID, such as social networking sites or gaming services; (iii) subscribing to newsletters; (iv) purchasing a product or services through Deen Games' online stores; (v) using "tell a friend," "email this page," or other similar features; (vi) requesting technical support; and (vii) otherwise through use of Deen Games Services where personal data is required for use and/or participation.
+
+The types of personal data may vary depending on the type of activity you are engaged in. The personal data Deen Games may collect, process and use may include, but are not limited to your name, screen/nick name, Deen Games Services' or third party service ID, e-mail address, phone number, photo or other image, birthdate, sex, address, friend connections, avatar image, credit card information, shipping information; and location (only if directly identifiable to you, otherwise Deen Games treats location as non-personal data).
+
+Deen Games may use collected personal data for purposes of analyzing usage of the Services, providing customer and technical support, managing and providing Services (including managing advertisement serving) and to further develop the Services and other Deen Games services and products. Deen Games may combine non-personal data with personal data.
+
+Deen Games may use your personal data to send messages to you with informative and/or commercial content about Deen Games' services or third party products and services Deen Games thinks may be of interest to you, such as new features and services, special offers and updated information.
+
+Please note that certain features of the Services may be able to connect to your social networking sites to obtain additional information about you. In such cases, Deen Games may be able to collect certain information from your social networking profile when your social networking site permits it, and when you consent to allow your social networking site to make that information available to Deen Games. This information may include, but is not limited to, your name, profile picture, gender, user ID, email address, your country, your language, your time zone, the organizations and links on your profile page, the names and profile pictures of your social networking site "friends" and other information you have included in your social networking site profile. Deen Games may associate and/or combine as well as use information collected by Deen Games and/or obtained through such social networking sites in accordance with this Privacy Policy.
+
+## Disclosure and Transfer of Personal Data
+
+Deen Games collects and processes personal data on a voluntary basis and it is not in the business of selling your personal data to third parties. Personal data may, however, occasionally be disclosed in accordance with applicable legislation and this Privacy Policy. Additionally, Deen Games may disclose personal data to its parent companies and its subsidiaries in accordance with this Privacy Policy.
+
+Deen Games may hire agents and contractors to collect and process personal data on Deen Games' behalf and in such cases such agents and contractors will be instructed to comply with our Privacy Policy and to use personal data only for the purposes for which the third party has been engaged by Deen Games. These agents and contractors may not use your personal data for their own marketing purposes. Deen Games may use third party service providers such as credit card processors, e-mail service providers, shipping agents, data analyzers and business intelligence providers. Deen Games has the right to share your personal data as necessary for the aforementioned third parties to provide their services for Deen Games. Deen Games is not liable for the acts and omissions of these third parties, except as provided by mandatory law.
+
+Deen Games may disclose your personal data to third parties as required by law enforcement or other government officials in connection with an investigation of fraud, intellectual property infringements, or other activity that is illegal or may expose you or Deen Games to legal liability. Deen Games may also disclose your personal data to third parties when Deen Games has a reason to believe that a disclosure is necessary to address potential or actual injury or interference with Deen Games' rights, property, operations, users or others who may be harmed or may suffer loss or damage, or Deen Games believes that such disclosure is necessary to protect Deen Games' rights, combat fraud and/or comply with a judicial proceeding, court order, or legal process served on Deen Games. To the extent permitted by applicable law, Deen Games will make reasonable efforts to notify you of such disclosure through Deen Games' website or in another reasonable manner.
+
+## Data Retention and Correctness
+
+Deen Games retains the data collected pursuant to this Privacy Policy for the period necessary to fulfill the purposes outlined in this Privacy Policy unless a longer retention period is required or permitted by law. Thereafter if the collected data is no longer needed for purposes specified in this Privacy Policy, Deen Games deletes all aforementioned data in its possession within a reasonable timeframe. Deen Games does not verify the correctness of personal data.
+
+Deen Games may still retain some of the data to the extent such retention is necessary to resolve disputes, enforce Deen Games user agreements, and comply with technical and legal requirements and constraints related to the security, integrity and operation of Services.
+
+## Cookies, beacons and tracking
+
+The Services may use "cookies" and other technologies such as pixel tags, clear GIFs and web beacons. Deen Games treats information collected by cookies and similar technologies as non-personal data.
+
+E-mails and other electronic communications Deen Games sends to you may contain code that enables Deen Games to track your usage of the communication, including whether the communication was opened and/or what links were followed (if any). Deen Games may combine that information to other information Deen Games has about you and Deen Games may use that information to improve the Services and/or provide customized communications to you.
+
+## Third Party Terms and Conditions
+
+Please note that your access to and use of the Services may be subject to certain third party terms and conditions and privacy policies, including but not limited to application stores, mobile software platforms, on-line gaming platforms, social networking services and payment providers. You recognize and agree that Deen Games is not liable for any such third party terms and conditions and their use of your personal data.
+
+Deen Games may in its discretion make available links through advertisements or otherwise enable you to access third party products or services. Please note that, while using such products or services, you are using products or services developed and administered by people or companies not affiliated with or controlled by Deen Games. Deen Games is not responsible for the actions of those people or companies, the content of their products or services, the use of information you provide to them, or any products or services they may offer. The fact that Deen Games is linking to those products or services does not constitute our sponsorship of, or affiliation with, those people or companies.
+
+Please note that certain Services that Deen Games may offer, such as multiplayer gaming, social networking and gaming console services, may use third party services to provide authentication for the Services with a gaming console ID, social networking ID or gaming network account. When you register to join or use the Services from a third-party gaming or social networking system, certain personally identifiable user and/or membership data may be transferred automatically to and from Deen Games and you hereby consent to the processing, using, combining, disclosing and retaining of such data in accordance with this Privacy Policy by Deen Games.
+
+## Safeguards
+
+Deen Games follows generally accepted industry standards and maintains reasonable safeguards to attempt to ensure the security, integrity and privacy of the information in Deen Games' possession. Only those persons with a need to process your personal data in connection with the fulfillment of their tasks in accordance with the purposes of this Privacy Policy and for the purposes of performing technical maintenance, have access to your personal data in Deen Games' possession. Personal data collected by Deen Games is stored in secure operating environments that are not available to the public. To prevent unauthorized on-line access to personal data, Deen Games maintains personal data behind a firewall-protected server. However, no system can be 100% secure and there is the possibility that despite Deen Games' reasonable efforts, there could be unauthorized access to your personal data. By using the Services, you assume this risk.
+
+## Other
+
+Please be aware of the open nature of certain social networking and other open features of the Services Deen Games may make available to you. You may choose to disclose data about yourself in the course of contributing user generated content to the Services. Any data that you disclose in any of these forums, blogs, chats or the like is public information, and there is no expectation of privacy or confidentiality. Deen Games is not responsible for any personal data you choose to make public in any of these forums.
+
+If you are under 15 years of age or a minor in your country of residence, please ask your legal guardian's permission to use or access the Services. Deen Games takes children's privacy seriously, and encourages parents and/or guardians to play an active role in their children's online experience at all times. Deen Games does not knowingly collect any personal information from children below the aforementioned age and if Deen Games learns that Deen Games has inadvertently gathered personal data from children under the aforementioned age, Deen Games will take reasonable measures to promptly erase such personal data from Deen Games' records.
+
+Deen Games may store and/or transfer your personal data to its affiliates and partners in and outside of EU/EEA member states and the United States in accordance with mandatory legislation and this Privacy Policy. Deen Games may disclose your personal data to third parties in connection with a corporate merger, consolidation, restructuring, the sale of substantially all of Deen Games' stock and/or assets or other corporate change, including, without limitation, during the course of any due diligence process provided, however, that this Privacy Policy shall continue to govern such personal data.
