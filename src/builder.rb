@@ -82,7 +82,7 @@ class Builder
 
     featured_html = File.read(JUMBOTRON_SNIPPET).sub('@content', featured_html)
     html = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
-    html = @master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{html}")
+    html = @master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}")
     File.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
     FileUtils.cp_r "#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images"
   end
