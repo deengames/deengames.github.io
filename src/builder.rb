@@ -78,11 +78,14 @@ class Builder
       # Create the header link for this page
       # Creates relative links. This is okay, since our site is flat (no subdirectories)
       page_name = get_page_name(page)
-      html = navbar_template.gsub('@url', "#{page_name}.html").gsub('@title', page_name)
+      html = navbar_template.gsub('@url', "#{page_name}.html").gsub('@title', to_title(page_name))
       links_html = "#{links_html}#{html}"
     end
 
     @master_page_html = index_page.gsub(NAVBAR_LINKS_PLACEHOLDER, links_html)
+
+    # TODO: make the real index page
+    FileUtils.rm "#{OUTPUT_DIR}/#{INDEX_PAGE}"
   end
 
    # page file: eg. data/pages/privacy_policy.md
@@ -96,5 +99,12 @@ class Builder
 
   def game_name_to_token(name)
     return name.gsub(' ', '-').gsub('_', '-').downcase.strip.chomp
+  end
+
+  # privacy_policy => Privacy Policy
+  # who_is_that_person => Who is that Person
+  def to_title(sentence)
+    stop_words = %w{a an and the or for of nor} #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
+    sentence.gsub('_', ' ').split.each_with_index.map{|word, index| stop_words.include?(word) && index > 0 ? word : word.capitalize }.join(" ")
   end
 end
