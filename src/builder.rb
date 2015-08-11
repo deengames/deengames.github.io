@@ -4,22 +4,25 @@ require 'kramdown'
 
 class Builder
 
-  OUTPUT_DIR = 'bin'
-  DATA_DIR = 'data'
+  OUTPUT_DIR = 'bin' # where to build to
+  DATA_DIR = 'data' # where our data files are
   DATABASE_FILE = "#{DATA_DIR}/games.yaml"
-
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
+
   TEMPLATE_DIRECTORY = 'templates'
-  # Copy the template dir. But not these items.
+  # We copy the template dir. But not these items.
   TEMPLATE_EXCLUSIONS = ['snippets']
 
-  INDEX_PAGE = 'index.html'
-  NAVBAR_LINKS_PLACEHOLDER = '<!-- DG navbar links -->'
+  INDEX_PAGE = 'index.html' # the home index page; this is also the layout.
+  NAVBAR_LINKS_PLACEHOLDER = '<!-- DG navbar links -->' # Where the navbar list of pages goes
+  # Snippets where we put in real data (eg. game page URLs)
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
   JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
-  CONTENT_PLACEHOLDER = '<!-- DG content -->'
-  IMAGE_SIZES = { :featured => '500x260', :regular => '300x156'}
+  CONTENT_PLACEHOLDER = '<!-- DG content -->' # Where in the template we fill in the page content
+  IMAGE_SIZES = { :featured => '500x260', :regular => '300x156'} # image sizes used in our HTML
+
+  DOWNLOADS_PATH = 'downloads' # location of Windows/Linux binaries
 
   def build
     start = Time.new
@@ -77,7 +80,7 @@ class Builder
         p.keys.each do |platform|
           html = "#{html}<img src='images/#{platform}.png' />"
           binary_path = p[platform]
-          binary_path = "downloads/#{platform}/#{binary_path}" if ['windows', 'linux'].include?(platform)
+          binary_path = "#{DOWNLOADS_PATH}/#{platform}/#{binary_path}" if ['windows', 'linux'].include?(platform)
           puts "For #{g['name']}, #{platform} is accessible from #{binary_path}"
         end
       end
