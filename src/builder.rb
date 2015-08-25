@@ -21,7 +21,6 @@ class Builder
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
   JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
   CONTENT_PLACEHOLDER = '<!-- DG content -->' # Where in the template we fill in the page content
-  IMAGE_SIZES = { :featured => '500x260', :regular => '300x156'} # image sizes used in our HTML
 
   DOWNLOADS_PATH = 'downloads' # location of Windows/Linux binaries
   GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
@@ -70,17 +69,17 @@ class Builder
 
     @games.each do |g|
       is_featured = g == @games[0] || g == @games[1]
-      size = is_featured ? IMAGE_SIZES[:featured] : IMAGE_SIZES[:regular]
+      type = is_featured ? 'featured' : 'regular'
       column_size = is_featured ? 6 : 4 # featured = half-screen, otherwise one-third
       # Regardless of extension, add size
       filename = g['screenshot']
       ['png', 'jpg'].each do |format|
-        filename.sub!(".#{format}", "-#{size}.#{format}")
+        filename.sub!(".#{format}", "-#{type}.#{format}")
       end
 
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
-
+      # 400 yes, 420 no
       html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a>"
 
       platform_html = ""
