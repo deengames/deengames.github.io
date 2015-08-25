@@ -24,6 +24,7 @@ class Builder
   IMAGE_SIZES = { :featured => '500x260', :regular => '300x156'} # image sizes used in our HTML
 
   DOWNLOADS_PATH = 'downloads' # location of Windows/Linux binaries
+  GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
 
   def build
     start = Time.new
@@ -65,10 +66,12 @@ class Builder
   def generate_game_entries
     featured_html = ''
     regular_html = ''
+    platform_html = ''
 
     @games.each do |g|
       is_featured = g == @games[0] || g == @games[1]
       size = is_featured ? IMAGE_SIZES[:featured] : IMAGE_SIZES[:regular]
+      column_size = is_featured ? 6 : 4 # featured = half-screen, otherwise one-third
       # Regardless of extension, add size
       filename = g['screenshot']
       ['png', 'jpg'].each do |format|
@@ -78,21 +81,26 @@ class Builder
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
 
-      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a><br />"
+      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a>"
+
+      platform_html = ""
       g['platforms'].each do |p|
         # TODO: switch to SVGs for these
         p.keys.each do |platform|
-          html = "#{html}<img src='images/#{platform}.png' />"
           binary_path = p[platform]
           binary_path = "#{DOWNLOADS_PATH}/#{platform}/#{binary_path}" if ['windows', 'linux'].include?(platform)
-          puts "For #{g['name']}, #{platform} is accessible from #{binary_path}"
+          binary_path = "#{GOOGLE_PLAY_PATH}#{p[platform]}" if platform == 'android'
+          platform_html = "#{platform_html}<a href='#{binary_path}'><img src='images/#{platform}.png' /></a>"
         end
       end
 
+      # Compose final HTML
+      final_html = "<div class='col-sm-#{column_size}'>#{html}<br />#{platform_html}</div>"
+
       if (is_featured)
-        featured_html = "#{featured_html}#{html}"
+        featured_html = "#{featured_html}#{final_html}"
       else
-        regular_html = "#{regular_html}#{html}"
+        regular_html = "#{regular_html}#{final_html}"
       end
     end
 
