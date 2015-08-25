@@ -1,6 +1,7 @@
 require 'json'
 require 'fileutils'
 require 'kramdown'
+require 'time'
 
 class Builder
 
@@ -36,7 +37,10 @@ class Builder
   private
 
   def load_data
-    @games = JSON.parse(File.read(DATABASE_FILE))['games']
+    @games = JSON.parse(File.read(DATABASE_FILE))['games'].sort! {
+      # sort by publication date, reverse chronologically
+      |x, y| Time.parse(y['published']) <=> Time.parse(x['published'])
+    }
     raise 'JSON structure changed; where is the top-level "games" list?' if @games.nil?
   end
 

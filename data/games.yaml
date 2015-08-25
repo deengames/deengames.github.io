@@ -4,8 +4,15 @@
       "name": "Quest for the Royal Jelly",
       "screenshot": "qfrj.png",
       "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
-      "published": "August 1, 2012",
+      "published": "2012-08-01",
       "platforms": [ { "windows": "questr.exe" } ]
+    },
+    {
+      "name": "Find the Harf",
+      "screenshot": "find-the-harf.png",
+      "blurb": "Learn the Arabic letters, with proper pronunciation for tajweed! Find the Harf is an Android game is for kids aged 3-6. It has options so you can tweak the difficulty for your children.",
+      "published": "2012-04-22",
+      "platforms": [ { "android": "com.deengames.findtheharf" } ]
     }
   ]
 }
