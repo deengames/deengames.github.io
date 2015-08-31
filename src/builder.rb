@@ -58,11 +58,20 @@ class Builder
 
     generate_master_page
     generate_static_pages
-    generate_game_entries
+    generate_front_page_game_entries
+    generate_game_pages
   end
 
-  # Generates entries for the front page
-  def generate_game_entries
+  def generate_game_pages
+    @games.each do |g|
+      html = "<h1>#{g['name']}</h1><p>#{g['blurb']}</p>"
+      html = @master_page_html.sub(CONTENT_PLACEHOLDER, html)
+      filename = url_for_game(g)
+      File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(html) }
+    end
+  end
+
+  def generate_front_page_game_entries
     featured_html = ''
     regular_html = ''
     platform_html = ''
@@ -79,7 +88,7 @@ class Builder
 
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
-      html = "<a href='#{game_name_to_token(g['name'])}.html'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
+      html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
 
       platform_html = ""
       g['platforms'].each do |p|
@@ -156,8 +165,12 @@ class Builder
     return page_name
   end
 
-  def game_name_to_token(name)
-    return name.gsub(' ', '-').gsub('_', '-').downcase.strip.chomp
+  # g => { :name => 'Quest for the Royal Jelly'}
+  # return: quest-for-the-royal-jelly.html
+  def url_for_game(g)
+    name = g['name']
+    name = name.gsub(' ', '-').gsub('_', '-').downcase.strip.chomp
+    return "#{name}.html"
   end
 
   # privacy_policy => Privacy Policy
