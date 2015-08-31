@@ -4,7 +4,7 @@
 
 - Add the vitals to `data/games.yaml`
 - Create the right-sized images in `images`. Right now, these are:
-  - `<game name>-500x260.png`
-  - `<game name>-300x256.png`
+  - `<game name>-featured.png` (450x278)
+  - `<game name>-normal.png` (290x179)
 - run `rake`.
 - Verify results locally. If it works, push.

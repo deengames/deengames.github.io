@@ -79,7 +79,7 @@ class Builder
 
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
-      html = "<a href='#{game_name_to_token(g['name'])}.html'><img src='#{game_image.sub('data/', '')}' /></a>"
+      html = "<a href='#{game_name_to_token(g['name'])}.html'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
 
       platform_html = ""
       g['platforms'].each do |p|
