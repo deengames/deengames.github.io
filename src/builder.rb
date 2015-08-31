@@ -21,6 +21,7 @@ class Builder
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
   JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
   CONTENT_PLACEHOLDER = '<!-- DG content -->' # Where in the template we fill in the page content
+  GAME_PATE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
 
   DOWNLOADS_PATH = 'downloads' # location of Windows/Linux binaries
   GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
@@ -64,10 +65,23 @@ class Builder
 
   def generate_game_pages
     @games.each do |g|
-      html = "<h1>#{g['name']}</h1><p>#{g['blurb']}</p>"
-      html = @master_page_html.sub(CONTENT_PLACEHOLDER, html)
+      html = File.read("#{GAME_PATE_TEMPLATE}")
+      html = html.gsub('@name', g['name']).gsub('@blurb', g['blurb'])
+      flash_data = flash_data_for(g)
+
+      if !flash_data.nil?
+        flash_template = File.read("#{TEMPLATE_DIRECTORY}/snippets/flash.html")
+        flash_template = flash_template.gsub('@swf', flash_data['swf'])
+        flash_template = flash_template.gsub('@width', flash_data['width'].to_s)
+        flash_template = flash_template.gsub('@height', flash_data['height'].to_s)
+        html = html.sub('@game', flash_template)
+      end
+      # get rid of @game if it's still around
+      html = html.gsub('@game', '')
+      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html)
       filename = url_for_game(g)
-      File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(html) }
+      File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
+      raise "WTF" if final_html.include?('@game')
     end
   end
 
@@ -78,13 +92,9 @@ class Builder
 
     @games.each do |g|
       is_featured = g == @games[0] || g == @games[1]
-      type = is_featured ? 'featured' : 'regular'
       column_size = is_featured ? 6 : 4 # featured = half-screen, otherwise one-third
       # Regardless of extension, add size
       filename = g['screenshot']
-      ['png', 'jpg'].each do |format|
-        filename.sub!(".#{format}", "-#{type}.#{format}")
-      end
 
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
@@ -93,9 +103,7 @@ class Builder
       platform_html = ""
       g['platforms'].each do |platform_data|
         # TODO: switch to SVGs for these
-        puts "#{g['name']}: #{platform_data}"
         platform_data.each do |platform, data|
-          puts "P=#{platform} D=#{data}"
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
@@ -161,6 +169,8 @@ class Builder
     @master_page_html = index_page.gsub(NAVBAR_LINKS_PLACEHOLDER, links_html)
   end
 
+############# start: make a Game class and put these inside
+
    # page file: eg. data/pages/privacy_policy.md
    # returns: 'privacy_policy'
   def get_page_name(markdown_filename)
@@ -177,6 +187,17 @@ class Builder
     name = name.gsub(' ', '-').gsub('_', '-').downcase.strip.chomp
     return "#{name}.html"
   end
+
+  def flash_data_for(g)
+    g['platforms'].each do |platform_data|
+      platform_data.each do |platform, data|
+        return data if platform == 'flash'
+      end
+    end
+
+    return nil
+  end
+############# end: make a Game class and put these inside
 
   # privacy_policy => Privacy Policy
   # who_is_that_person => Who is that Person
