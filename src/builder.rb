@@ -10,6 +10,7 @@ class Builder
   DATABASE_FILE = "#{DATA_DIR}/games.yaml"
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
+  FLASH_DIR = "#{DATA_DIR}/flash"
 
   TEMPLATE_DIRECTORY = 'templates'
   # We copy the template dir. But not these items.
@@ -56,6 +57,7 @@ class Builder
     TEMPLATE_EXCLUSIONS.each do |exclusion|
       FileUtils.rm_rf exclusion
     end
+    FileUtils.cp_r FLASH_DIR, OUTPUT_DIR
 
     generate_master_page
     generate_static_pages
