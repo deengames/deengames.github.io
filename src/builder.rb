@@ -91,13 +91,18 @@ class Builder
       html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
 
       platform_html = ""
-      g['platforms'].each do |p|
+      g['platforms'].each do |platform_data|
         # TODO: switch to SVGs for these
-        p.keys.each do |platform|
-          binary_path = p[platform]
-          binary_path = "#{DOWNLOADS_PATH}/#{platform}/#{binary_path}" if ['windows', 'linux'].include?(platform)
-          binary_path = "#{GOOGLE_PLAY_PATH}#{p[platform]}" if platform == 'android'
-          platform_html = "#{platform_html}<a href='#{binary_path}'><img src='images/#{platform}.png' /></a>"
+        puts "#{g['name']}: #{platform_data}"
+        platform_data.each do |platform, data|
+          puts "P=#{platform} D=#{data}"
+          # windows/linux: value = executable
+          # android: value = google play ID
+          # flash: value = { :width, :height, :swf }
+          link_target = "#{DOWNLOADS_PATH}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
+          link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
+          link_target = url_for_game(g) if platform == 'flash'
+          platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.png' /></a>"
         end
       end
 
