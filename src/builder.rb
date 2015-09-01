@@ -112,7 +112,8 @@ class Builder
           link_target = "#{DOWNLOADS_PATH}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
           link_target = url_for_game(g) if platform == 'flash'
-          platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.png' /></a>"
+          ext = platform == 'silverlight' ? 'png' : 'svg'
+          platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.#{ext}' width='32' height='32' /></a>"
         end
       end
 
