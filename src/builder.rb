@@ -80,7 +80,7 @@ class Builder
       end
       # get rid of @game if it's still around
       html = html.gsub('@game', '')
-      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html)
+      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
       raise "WTF" if final_html.include?('@game')
@@ -129,7 +129,7 @@ class Builder
 
     featured_html = File.read(JUMBOTRON_SNIPPET).sub('@content', featured_html)
     html = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
-    html = @master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}")
+    html = @master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}").gsub('@title', 'Home')
     File.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
     FileUtils.cp_r "#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images"
   end
@@ -142,7 +142,7 @@ class Builder
     @pages.each do |p|
       markdown = File.read(p)
       to_html = Kramdown::Document.new(markdown).to_html
-      html = @master_page_html.sub(CONTENT_PLACEHOLDER, to_html)
+      html = @master_page_html.sub(CONTENT_PLACEHOLDER, to_html).gsub('@title', to_title(get_page_name(p)))
       page_name = get_page_name(p)
       File.write("#{OUTPUT_DIR}/#{page_name}.html", html)
     end
@@ -172,7 +172,7 @@ class Builder
     @master_page_html = index_page.gsub(NAVBAR_LINKS_PLACEHOLDER, links_html)
   end
 
-############# start: make a Game class and put these inside
+### start: make a Game class and put these inside
 
    # page file: eg. data/pages/privacy_policy.md
    # returns: 'privacy_policy'
@@ -200,7 +200,8 @@ class Builder
 
     return nil
   end
-############# end: make a Game class and put these inside
+
+### end: make a Game class and put these inside
 
   # privacy_policy => Privacy Policy
   # who_is_that_person => Who is that Person

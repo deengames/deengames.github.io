@@ -12,14 +12,14 @@
       "screenshot": "find-the-harf.png",
       "blurb": "Learn the Arabic letters, with proper pronunciation for tajweed! Find the Harf is an Android game is for kids aged 3-6. It has options so you can tweak the difficulty for your children.",
       "published": "2012-04-22",
-      "platforms": [ { "android": "com.deengames.findtheharf" }, { "windows": "fth.exe" } ]
+      "platforms": [ { "android": "com.deengames.findtheharf", "windows": "fth.exe" } ]
     },
     {
       "name": "Fake 1",
       "screenshot": "qfrj.png",
       "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
       "published": "2011-08-01",
-      "platforms": [ { "windows": "questr.exe" } ]
+      "platforms": [ { "linux": "questr.exe", "apple": "questr.dmg", "html5": "qf.html", "silverlight": "HI.qfrj.xap" } ]
     },
     {
       "name": "Fake 2",
