@@ -15,11 +15,11 @@
       "platforms": [ { "android": "com.deengames.findtheharf", "windows": "fth.exe" } ]
     },
     {
-      "name": "Fake 1",
-      "screenshot": "qfrj.png",
-      "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
-      "published": "2011-08-01",
-      "platforms": [ { "linux": "questr.exe", "apple": "questr.dmg", "html5": "qf.html", "silverlight": "HI.qfrj.xap" } ]
+      "name": "Terrace",
+      "screenshot": "terrace.png",
+      "blurb": "HI FOXY FOX",
+      "published": "2015-07-01",
+      "platforms": [ { "html5": { "folder": "terrace", "width": 800, "height": 600 } } ]
     },
     {
       "name": "Fake 2",

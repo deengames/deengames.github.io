@@ -10,7 +10,7 @@ class Builder
   DATABASE_FILE = "#{DATA_DIR}/games.yaml"
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
-  FLASH_DIR = "#{DATA_DIR}/flash"
+  GAMES_DIR = "#{DATA_DIR}/games"
 
   TEMPLATE_DIRECTORY = 'templates'
   # We copy the template dir. But not these items.
@@ -57,7 +57,7 @@ class Builder
     TEMPLATE_EXCLUSIONS.each do |exclusion|
       FileUtils.rm_rf exclusion
     end
-    FileUtils.cp_r FLASH_DIR, OUTPUT_DIR
+    FileUtils.cp_r GAMES_DIR, OUTPUT_DIR
 
     generate_master_page
     generate_static_pages
@@ -69,14 +69,25 @@ class Builder
     @games.each do |g|
       html = File.read("#{GAME_PATE_TEMPLATE}")
       html = html.gsub('@name', g['name']).gsub('@blurb', g['blurb'])
-      flash_data = flash_data_for(g)
+      in_page_data = in_page_data_for(g)
 
-      if !flash_data.nil?
-        flash_template = File.read("#{TEMPLATE_DIRECTORY}/snippets/flash.html")
-        flash_template = flash_template.gsub('@swf', flash_data['swf'])
-        flash_template = flash_template.gsub('@width', flash_data['width'].to_s)
-        flash_template = flash_template.gsub('@height', flash_data['height'].to_s)
-        html = html.sub('@game', flash_template)
+      if !in_page_data.nil?
+        platform = in_page_data[:platform]
+        data = in_page_data[:data]
+
+        # Common to flash/html5
+        template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
+        template = template.gsub('@width', data['width'].to_s)
+        template = template.gsub('@height', data['height'].to_s)
+
+        if platform == 'flash'
+          template = template.gsub('@swf', "games/flash/#{data['swf']}")
+        elsif platform == 'html5'
+          template = template.gsub('@folder', data['folder'])
+        else
+          raise "Not sure how to get in-page data for #{platform}"
+        end
+        html = html.sub('@game', template)
       end
       # get rid of @game if it's still around
       html = html.gsub('@game', '')
@@ -111,7 +122,7 @@ class Builder
           # flash: value = { :width, :height, :swf }
           link_target = "#{DOWNLOADS_PATH}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
-          link_target = url_for_game(g) if platform == 'flash'
+          link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
           ext = platform == 'silverlight' ? 'png' : 'svg'
           platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.#{ext}' width='32' height='32' /></a>"
         end
@@ -191,10 +202,12 @@ class Builder
     return "#{name}.html"
   end
 
-  def flash_data_for(g)
+  # HTML5 and Flash need to be shown in-page
+  def in_page_data_for(g)
     g['platforms'].each do |platform_data|
       platform_data.each do |platform, data|
-        return data if platform == 'flash'
+        # if you specify both, returns the first one found
+        return { :platform => platform, :data => data} if ['flash', 'html5'].include?(platform)
       end
     end
 
