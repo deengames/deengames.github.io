@@ -69,33 +69,43 @@ class Builder
     @games.each do |g|
       html = File.read("#{GAME_PATE_TEMPLATE}")
       html = html.gsub('@name', g['name']).gsub('@blurb', g['blurb'])
-      in_page_data = in_page_data_for(g)
 
-      if !in_page_data.nil?
-        platform = in_page_data[:platform]
-        data = in_page_data[:data]
-
-        # Common to flash/html5
-        template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
-        template = template.gsub('@width', data['width'].to_s)
-        template = template.gsub('@height', data['height'].to_s)
-
-        if platform == 'flash'
-          template = template.gsub('@swf', "games/flash/#{data['swf']}")
-        elsif platform == 'html5'
-          template = template.gsub('@folder', data['folder'])
-        else
-          raise "Not sure how to get in-page data for #{platform}"
-        end
-        html = html.sub('@game', template)
-      end
-      # get rid of @game if it's still around
-      html = html.gsub('@game', '')
+      # Start adding per-platform HTML
+      # For HTML5 and Flash, add in-page game playing
+      html = get_inpage_platforms_html(g, html)
       final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
+
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
-      raise "WTF" if final_html.include?('@game')
     end
+  end
+
+  # Modifies "html": replaces @game with in-place game code
+  def get_inpage_platforms_html(g, html)
+    in_page_data = platform_data(g, ['flash', 'html5'])
+
+    if !in_page_data.empty?
+      data = in_page_data[:html5] || in_page_data[:flash]  # html5 first, then flash -- not both
+      platform = :html5 if in_page_data.key?(:html5)
+      platform = :flash if platform.nil?
+
+      # Common to flash/html5
+      template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
+      template = template.gsub('@width', data['width'].to_s)
+      template = template.gsub('@height', data['height'].to_s)
+
+      if platform == :flash
+        template = template.gsub('@swf', "games/flash/#{data['swf']}")
+      elsif platform == :html5
+        template = template.gsub('@folder', data['folder'])
+      else
+        raise "Not sure how to get in-page data for #{platform}"
+      end
+      html = html.sub('@game', template)
+    end
+    # get rid of @game if it's still around
+    html = html.gsub('@game', '')
+    return html
   end
 
   def generate_front_page_game_entries
@@ -202,16 +212,22 @@ class Builder
     return "#{name}.html"
   end
 
-  # HTML5 and Flash need to be shown in-page
-  def in_page_data_for(g)
+  # Get all datapoints for specific platforms. If you pass in (g, ['windows', 'linux']),
+  # you'll get data for both windows and linux (if they're both there).
+  # HTML5 and Flash need to be shown in-page.
+  # Windows, Linux, and Mac need a download link.
+  # Returns an array, eg. {:windows => ..., :linux => ...}
+  def platform_data(g, target_platforms)
+    to_return = {}
+
     g['platforms'].each do |platform_data|
       platform_data.each do |platform, data|
         # if you specify both, returns the first one found
-        return { :platform => platform, :data => data} if ['flash', 'html5'].include?(platform)
+        to_return[platform.to_sym] = data if target_platforms.include?(platform)
       end
     end
 
-    return nil
+    return to_return
   end
 
 ### end: make a Game class and put these inside
