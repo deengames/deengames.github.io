@@ -22,9 +22,8 @@ class Builder
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
   JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
   CONTENT_PLACEHOLDER = '<!-- DG content -->' # Where in the template we fill in the page content
-  GAME_PATE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
+  GAME_PAGE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
 
-  DOWNLOADS_PATH = 'downloads' # location of Windows/Linux binaries
   GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
 
   def build
@@ -67,12 +66,13 @@ class Builder
 
   def generate_game_pages
     @games.each do |g|
-      html = File.read("#{GAME_PATE_TEMPLATE}")
+      html = File.read("#{GAME_PAGE_TEMPLATE}")
       html = html.gsub('@name', g['name']).gsub('@blurb', g['blurb'])
 
       # Start adding per-platform HTML
       # For HTML5 and Flash, add in-page game playing
       html = get_inpage_platforms_html(g, html)
+      html = get_downloadable_platforms_html(g, html)
       final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
 
       filename = url_for_game(g)
@@ -80,7 +80,32 @@ class Builder
     end
   end
 
-  # Modifies "html": replaces @game with in-place game code
+  # Modifies "html": replaces @downloads with download links
+  def get_downloadable_platforms_html(g, html)
+    downloadable_data = platform_data(g, ['windows', 'linux', 'mac'])
+    template = File.read("#{TEMPLATE_DIRECTORY}/snippets/download_game.html")
+    downloads_html = ''
+
+    if !downloadable_data.empty?
+      downloadable_data.each do |platform, data|
+        root_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
+        url = "#{root_dir}/#{platform}/#{data}"
+        name = "#{platform.capitalize} version"
+        downloads_html = "#{downloads_html}#{template.gsub('@url', url).gsub('@name', name)}"
+      end
+    end
+
+    # If we have something to download, show the download section.
+    if !downloads_html.empty?
+      downloads_section = File.read("#{TEMPLATE_DIRECTORY}/snippets/downloads.html")
+      downloads_section.sub!('@html', downloads_html)
+      html = html.sub('@downloads', downloads_section)
+    end
+
+    return html
+  end
+
+  # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
   def get_inpage_platforms_html(g, html)
     in_page_data = platform_data(g, ['flash', 'html5'])
 
@@ -102,9 +127,11 @@ class Builder
         raise "Not sure how to get in-page data for #{platform}"
       end
       html = html.sub('@game', template)
+    else
+      # get rid of @game if it's still around
+      html = html.gsub('@game', '')
     end
-    # get rid of @game if it's still around
-    html = html.gsub('@game', '')
+
     return html
   end
 
@@ -130,7 +157,7 @@ class Builder
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
-          link_target = "#{DOWNLOADS_PATH}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
+          link_target = "#{GAMES_DIR}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
           link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
           ext = platform == 'silverlight' ? 'png' : 'svg'
