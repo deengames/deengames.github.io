@@ -7,7 +7,7 @@ class Builder
 
   OUTPUT_DIR = 'bin' # where to build to
   DATA_DIR = 'data' # where our data files are
-  DATABASE_FILE = "#{DATA_DIR}/games.yaml"
+  DATABASE_FILE = "#{DATA_DIR}/games.json"
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
   GAMES_DIR = "#{DATA_DIR}/games"
@@ -73,13 +73,29 @@ class Builder
       # For HTML5 and Flash, add in-page game playing
       html = get_inpage_platforms_html(g, html)
       html = get_downloadable_platforms_html(g, html)
-      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
-
+      html = get_mobile_links(g, html)      
+      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])      
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
     end
   end
 
+  # Modifies "html": replaces @mobile with mobile links
+  def get_mobile_links(g, html)    
+    links_html = ''
+    mobile_data = platform_data(g, ['android']) #TODO: iOS
+    if !mobile_data.empty?      
+      mobile_data.each do |platform, data|        
+        link_target = "#{GOOGLE_PLAY_PATH}#{data}"
+        links_html += "<a href='#{link_target}'><img src='images/google-play-badge.png' /></a>"
+      end
+      html = html.gsub('@mobile', links_html)
+    else
+      html = html.gsub('@mobile', '')
+    end    
+    return html
+  end
+  
   # Modifies "html": replaces @downloads with download links
   def get_downloadable_platforms_html(g, html)
     downloadable_data = platform_data(g, ['windows', 'linux', 'mac'])
@@ -100,6 +116,8 @@ class Builder
       downloads_section = File.read("#{TEMPLATE_DIRECTORY}/snippets/downloads.html")
       downloads_section.sub!('@html', downloads_html)
       html = html.sub('@downloads', downloads_section)
+    else
+      html = html.sub('@downloads', '')
     end
 
     return html
