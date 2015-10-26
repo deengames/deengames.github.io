@@ -1,4 +1,4 @@
-[Website](http://deengames.github.io)
+[View Website](http://deengames.github.io)
 
 # Adding a New game
 
