@@ -1,0 +1,17 @@
+body {
+  padding-top: 70px; /* space between navbar and content */
+  background: #def;
+}
+
+#main {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+iframe {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  overflow: hidden;
+}
