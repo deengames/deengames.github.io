@@ -24,6 +24,7 @@ class Builder
   # Snippets where we put in real data (eg. game page URLs)
   NAVBAR_LINK_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/navbar_link.html"
   JUMBOTRON_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/jumbotron.html"
+  SCREENSHOTS_SNIPPET = "#{TEMPLATE_DIRECTORY}/snippets/screenshots.html"
   CONTENT_PLACEHOLDER = '<!-- DG content -->' # Where in the template we fill in the page content
   GAME_PAGE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
 
@@ -92,8 +93,9 @@ class Builder
   # Replace @screenshots with screenshots
   def get_screenshots(g, html)    
     if !g['screenshots'].nil?
-      ss_html = "<h2>Screenshots</h2>" # Mixing HTML and code is bad, dude.
+      template = File.read(SCREENSHOTS_SNIPPET)
       name = url_for_game(g).sub('.html', '')
+      ss_html = ''
       g['screenshots'].each do |s|
         url = "images/#{name}/#{s}"
         native_size = FastImage.size("data/#{url}") # [w, h]
@@ -103,7 +105,8 @@ class Builder
         scale_h = (scale * native_size[1]).to_i
         ss_html = "#{ss_html}<img src='#{url}' width='#{scale_w}' height='#{scale_h}' data-jslghtbx='#{url}' />"
       end
-      html = html.gsub('@screenshots', ss_html)
+      template = template.gsub('@screenshots', ss_html)
+      html = html.gsub('@screenshots', template)
     else
       html = html.gsub('@screenshots', '')
     end    
