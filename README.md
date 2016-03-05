@@ -13,3 +13,7 @@
 - Create an image in `data/images/<game name>.png`. This image should be 450x278. (It's scaled down when not featured.)
 - run `rake`.
 - Verify results locally. If it works, push.
+
+# Repository Organization
+
+GitHub Pages sites demand that the actual content is in the `master` branch. As such, source code is in the `source` branch.
