@@ -1,7 +1,10 @@
 require 'json'
 require 'fileutils'
-require 'kramdown'
 require 'time'
+
+# Gems
+require 'kramdown'
+require 'fastimage'
 
 class Builder
 
@@ -25,6 +28,11 @@ class Builder
   GAME_PAGE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
 
   GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
+  
+  # When scaling images, scale down to this width/height (whatever's smaller)
+  # The image width (if a landscape image) is guaranteed to be 250px or less
+  # The image height (if a portrait image) is guaranteed to be 250px or less
+  MAX_SCREENSHOT_SIZE = 250 
 
   def build
     start = Time.new
@@ -73,11 +81,33 @@ class Builder
       # For HTML5 and Flash, add in-page game playing
       html = get_inpage_platforms_html(g, html)
       html = get_downloadable_platforms_html(g, html)
-      html = get_mobile_links(g, html)      
+      html = get_mobile_links(g, html)
+      html = get_screenshots(g, html)
       final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])      
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
     end
+  end
+
+  # Replace @screenshots with screenshots
+  def get_screenshots(g, html)    
+    if !g['screenshots'].nil?
+      ss_html = "<h2>Screenshots</h2>" # Mixing HTML and code is bad, dude.
+      name = url_for_game(g).sub('.html', '')
+      g['screenshots'].each do |s|
+        url = "images/#{name}/#{s}"
+        native_size = FastImage.size("data/#{url}") # [w, h]
+        # Scale to 250px. Unless the image is already smaller. Then don't scale.
+        scale = [1.0 * MAX_SCREENSHOT_SIZE / native_size[0],  1.0 * MAX_SCREENSHOT_SIZE / native_size[1], 1].min
+        scale_w = (scale * native_size[0]).to_i
+        scale_h = (scale * native_size[1]).to_i
+        ss_html = "#{ss_html}<img src='#{url}' width='#{scale_w}' height='#{scale_h}' data-jslghtbx='#{url}' />"
+      end
+      html = html.gsub('@screenshots', ss_html)
+    else
+      html = html.gsub('@screenshots', '')
+    end    
+    return html
   end
 
   # Modifies "html": replaces @mobile with mobile links
