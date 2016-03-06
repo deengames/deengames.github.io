@@ -1,26 +1,18 @@
 {
   "games": [
     {
-      "name": "This is my Lord",
-      "screenshot": "this-is-my-lord.png",
-      "blurb": "Follow the story of Prophet Ibraheem (alayhi salaam) as he calls his people to submit to Allah alone. He did not worship the stars, the moon, or the sun, but he worshipped Allah, alone. Read and listen to the message he gave his people, as recorded directly in the pages of the Qur'an.",
-      "published": "2015-01-22",
-      "platforms": [ { "android": "com.deengames.thisismylord" }, { "flash": { "swf": "this-is-my-lord.swf", "width": 1024, "height": 576  } } ]
-    },
-    {
       "name": "Quest for the Royal Jelly",
-      "screenshot": "quest-for-the-royal-jelly.png",
+      "screenshot": "qfrj.png",
       "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
       "published": "2012-08-01",
-      "platforms": [ { "windows": "quest-for-the-royal-jelly-1.0.zip" } ]
+      "platforms": [ { "windows": "https://github.com/deengames/quest-for-the-royal-jelly/releases/download/v1.0/quest-for-the-royal-jelly-1.0.zip" } ]
     },
     {
       "name": "Find the Harf",
       "screenshot": "find-the-harf.png",
       "blurb": "Learn the Arabic letters, with proper pronunciation for tajweed! Find the Harf is an Android game is for kids aged 3-6. It has options so you can tweak the difficulty for your children.",
       "published": "2012-05-20",
-      "platforms": [ { "android": "com.deengames.findtheharf" } ],
-      "screenshots": [ "fth-1.png", "fth-2.png", "fth-3.png"]
+      "platforms": [ { "android": "com.deengames.findtheharf" } ]
     }
   ]
 }
