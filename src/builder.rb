@@ -200,6 +200,7 @@ class Builder
       game_image = "#{IMAGES_DIR}/#{filename}"
       raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
       html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
+      game_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
 
       platform_html = ""
       g['platforms'].each do |platform_data|
@@ -208,9 +209,10 @@ class Builder
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
-          link_target = "#{GAMES_DIR}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
+          link_target = "#{game_dir}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
           link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
+          
           ext = platform == 'silverlight' ? 'png' : 'svg'
           platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.#{ext}' width='32' height='32' /></a>"
         end
