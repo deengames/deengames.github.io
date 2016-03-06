@@ -13,7 +13,6 @@ class Builder
   DATABASE_FILE = "#{DATA_DIR}/games.json"
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
-  GAMES_DIR = "#{DATA_DIR}/games"
 
   TEMPLATE_DIRECTORY = 'templates'
   # We copy the template dir. But not these items.
@@ -29,11 +28,11 @@ class Builder
   GAME_PAGE_TEMPLATE = "#{TEMPLATE_DIRECTORY}/game.html"
 
   GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
-  
+
   # When scaling images, scale down to this width/height (whatever's smaller)
   # The image width (if a landscape image) is guaranteed to be 250px or less
   # The image height (if a portrait image) is guaranteed to be 250px or less
-  MAX_SCREENSHOT_SIZE = 250 
+  MAX_SCREENSHOT_SIZE = 250
 
   def build
     start = Time.new
@@ -65,7 +64,6 @@ class Builder
     TEMPLATE_EXCLUSIONS.each do |exclusion|
       FileUtils.rm_rf exclusion
     end
-    FileUtils.cp_r GAMES_DIR, OUTPUT_DIR
 
     generate_master_page
     generate_static_pages
@@ -84,14 +82,14 @@ class Builder
       html = get_downloadable_platforms_html(g, html)
       html = get_mobile_links(g, html)
       html = get_screenshots(g, html)
-      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])      
+      final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
     end
   end
 
   # Replace @screenshots with screenshots
-  def get_screenshots(g, html)    
+  def get_screenshots(g, html)
     if !g['screenshots'].nil?
       template = File.read(SCREENSHOTS_SNIPPET)
       name = url_for_game(g).sub('.html', '')
@@ -109,26 +107,26 @@ class Builder
       html = html.gsub('@screenshots', template)
     else
       html = html.gsub('@screenshots', '')
-    end    
+    end
     return html
   end
 
   # Modifies "html": replaces @mobile with mobile links
-  def get_mobile_links(g, html)    
+  def get_mobile_links(g, html)
     links_html = ''
     mobile_data = platform_data(g, ['android']) #TODO: iOS
-    if !mobile_data.empty?      
-      mobile_data.each do |platform, data|        
+    if !mobile_data.empty?
+      mobile_data.each do |platform, data|
         link_target = "#{GOOGLE_PLAY_PATH}#{data}"
         links_html += "<a href='#{link_target}'><img src='images/google-play-badge.png' /></a>"
       end
       html = html.gsub('@mobile', links_html)
     else
       html = html.gsub('@mobile', '')
-    end    
+    end
     return html
   end
-  
+
   # Modifies "html": replaces @downloads with download links
   def get_downloadable_platforms_html(g, html)
     downloadable_data = platform_data(g, ['windows', 'linux', 'mac'])
@@ -137,10 +135,8 @@ class Builder
 
     if !downloadable_data.empty?
       downloadable_data.each do |platform, data|
-        root_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
-        url = "#{root_dir}/#{platform}/#{data}"
         name = "#{platform.capitalize} version"
-        downloads_html = "#{downloads_html}#{template.gsub('@url', url).gsub('@name', name)}"
+        downloads_html = "#{template.gsub('@url', data).gsub('@name', name)}"
       end
     end
 
@@ -171,7 +167,7 @@ class Builder
       template = template.gsub('@height', data['height'].to_s)
 
       if platform == :flash
-        template = template.gsub('@swf', "games/flash/#{data['swf']}")
+        template = template.gsub('@swf', "#{data['swf']}")
       elsif platform == :html5
         template = template.gsub('@folder', data['folder'])
       else
@@ -208,7 +204,7 @@ class Builder
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
-          link_target = "#{GAMES_DIR}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
+          link_target = "#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
           link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
           ext = platform == 'silverlight' ? 'png' : 'svg'
