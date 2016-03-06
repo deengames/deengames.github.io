@@ -13,6 +13,7 @@ class Builder
   DATABASE_FILE = "#{DATA_DIR}/games.json"
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
+  GAMES_DIR = "#{DATA_DIR}/games"
 
   TEMPLATE_DIRECTORY = 'templates'
   # We copy the template dir. But not these items.
@@ -64,6 +65,7 @@ class Builder
     TEMPLATE_EXCLUSIONS.each do |exclusion|
       FileUtils.rm_rf exclusion
     end
+    FileUtils.cp_r GAMES_DIR, OUTPUT_DIR
 
     generate_master_page
     generate_static_pages
@@ -135,8 +137,10 @@ class Builder
 
     if !downloadable_data.empty?
       downloadable_data.each do |platform, data|
+        root_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
+        url = "#{root_dir}/#{platform}/#{data}"
         name = "#{platform.capitalize} version"
-        downloads_html = "#{template.gsub('@url', data).gsub('@name', name)}"
+        downloads_html = "#{downloads_html}#{template.gsub('@url', url).gsub('@name', name)}"
       end
     end
 
@@ -167,7 +171,7 @@ class Builder
       template = template.gsub('@height', data['height'].to_s)
 
       if platform == :flash
-        template = template.gsub('@swf', "#{data['swf']}")
+        template = template.gsub('@swf', "games/flash/#{data['swf']}")
       elsif platform == :html5
         template = template.gsub('@folder', data['folder'])
       else
@@ -204,7 +208,7 @@ class Builder
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
-          link_target = "#{data}" if ['windows', 'linux'].include?(platform)
+          link_target = "#{GAMES_DIR}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
           link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
           ext = platform == 'silverlight' ? 'png' : 'svg'
