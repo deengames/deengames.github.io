@@ -76,7 +76,10 @@ class Builder
   def generate_game_pages
     @games.each do |g|
       html = File.read("#{GAME_PAGE_TEMPLATE}")
-      html = html.gsub('@name', g['name']).gsub('@blurb', g['blurb'])
+      html = html
+        .gsub('@name', g['name'])
+        .gsub('@blurb', g['blurb'])
+        .gsub('@version', g['version'] || '1.0.0')
 
       # Start adding per-platform HTML
       # For HTML5 and Flash, add in-page game playing

@@ -2,6 +2,7 @@
   "games": [
     {
       "name": "This is my Lord",
+      "version": "1.0.3",
       "screenshot": "this-is-my-lord.png",
       "blurb": "Follow the story of Prophet Ibraheem (alayhi salaam) as he calls his people to submit to Allah alone. He did not worship the stars, the moon, or the sun, but he worshipped Allah, alone. Read and listen to the message he gave his people, as recorded directly in the pages of the Qur'an.",
       "published": "2015-01-22",
@@ -9,6 +10,7 @@
     },
     {
       "name": "Quest for the Royal Jelly",
+      "version": "1.0.0",            
       "screenshot": "quest-for-the-royal-jelly.png",
       "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
       "published": "2012-08-01",
@@ -16,6 +18,7 @@
     },
     {
       "name": "Find the Harf",
+      "version": "1.3.0",      
       "screenshot": "find-the-harf.png",
       "blurb": "Learn the Arabic letters, with proper pronunciation for tajweed! Find the Harf is an Android game is for kids aged 3-6. It has options so you can tweak the difficulty for your children.",
       "published": "2012-05-20",
@@ -24,6 +27,7 @@
     },
     {
       "name": "Devil's Swords",
+      "version": "1.0.0",
       "screenshot": "devils-swords.png",
       "blurb": "The time of enlightenment and knowledge is past. Ignorance grips the land. An ancient force from the time of Adam (on whom be peace), powerless for centuries, arises once more, and strikes. Unable to defend themselves, unable to even identify the source of their peril, the people fall prey to it. Corruption spreads. Cities fall. Civilizations crumble. The excuses rise once more.",
       "published": "2003-04-27",
