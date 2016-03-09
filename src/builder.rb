@@ -99,6 +99,7 @@ class Builder
       g['screenshots'].each do |s|
         url = "images/#{name}/#{s}"
         native_size = FastImage.size("data/#{url}") # [w, h]
+        raise "Can't get native size of images/#{name}/#{s}" if native_size.nil?
         # Scale to 250px. Unless the image is already smaller. Then don't scale.
         scale = [1.0 * MAX_SCREENSHOT_SIZE / native_size[0],  1.0 * MAX_SCREENSHOT_SIZE / native_size[1], 1].min
         scale_w = (scale * native_size[0]).to_i
@@ -288,7 +289,7 @@ class Builder
   # return: quest-for-the-royal-jelly.html
   def url_for_game(g)
     name = g['name']
-    name = name.gsub(' ', '-').gsub('_', '-').downcase.strip.chomp
+    name = name.gsub(' ', '-').gsub('_', '-').gsub("'", "").downcase.strip.chomp
     return "#{name}.html"
   end
 
