@@ -26,6 +26,14 @@
       "screenshots": [ "fth-1.png", "fth-2.png", "fth-3.png"]
     },
     {
+      "name": "Valence",
+      "version": "1.0.0",      
+      "screenshot": "valence.png",
+      "blurb": "A game of molecular madness. Stabilize atoms by matching opposing valences to create net-zero molecules. Work though four game modes, twenty different levels, and three atom types, to ultimately save the world--and your own life.",
+      "published": "2010-07-21",
+      "platforms": [ { "silverlight": "valence.xap" } ]      
+    },
+    {
       "name": "Devil's Swords",
       "version": "1.0.0",
       "screenshot": "devils-swords.png",

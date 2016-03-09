@@ -162,22 +162,27 @@ class Builder
 
   # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
   def get_inpage_platforms_html(g, html)
-    in_page_data = platform_data(g, ['flash', 'html5'])
+    in_page_data = platform_data(g, ['flash', 'html5', 'silverlight'])
 
     if !in_page_data.empty?
-      data = in_page_data[:html5] || in_page_data[:flash]  # html5 first, then flash -- not both
+      data = in_page_data[:html5] || in_page_data[:flash] || in_page_data[:silverlight]  # html5 first, then flash -- not both
       platform = :html5 if in_page_data.key?(:html5)
-      platform = :flash if platform.nil?
-
+      platform = :flash if in_page_data.key?(:flash)
+      platform = :silverlight if in_page_data.key?(:silverlight)
+      throw "Not sure how to process platform: #{in_page_data}" if platform.nil?
+      
       # Common to flash/html5
       template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
       template = template.gsub('@width', data['width'].to_s)
       template = template.gsub('@height', data['height'].to_s)
+      
 
       if platform == :flash
         template = template.gsub('@swf', "games/flash/#{data['swf']}")
       elsif platform == :html5
         template = template.gsub('@folder', data['folder'])
+      elsif platform == :silverlight
+        template = template.gsub('@xap', "games/silverlight/#{data['xap']}")
       else
         raise "Not sure how to get in-page data for #{platform}"
       end
@@ -213,9 +218,10 @@ class Builder
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
+          # silverlight: value = xap file
           link_target = "#{game_dir}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
           link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
-          link_target = url_for_game(g) if ['flash', 'html5'].include?(platform)
+          link_target = url_for_game(g) if ['flash', 'html5', 'silverlight'].include?(platform)
           
           ext = platform == 'silverlight' ? 'png' : 'svg'
           platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.#{ext}' width='32' height='32' /></a>"
@@ -298,7 +304,7 @@ class Builder
 
   # Get all datapoints for specific platforms. If you pass in (g, ['windows', 'linux']),
   # you'll get data for both windows and linux (if they're both there).
-  # HTML5 and Flash need to be shown in-page.
+  # HTML5, Flash, and Silverlight need to be shown in-page.
   # Windows, Linux, and Mac need a download link.
   # Returns an array, eg. {:windows => ..., :linux => ...}
   def platform_data(g, target_platforms)
@@ -307,9 +313,11 @@ class Builder
     g['platforms'].each do |platform_data|
       platform_data.each do |platform, data|
         # if you specify both, returns the first one found
-        to_return[platform.to_sym] = data if target_platforms.include?(platform)
+        if target_platforms.include?(platform)
+            to_return[platform.to_sym] = data
+        end
       end
-    end
+    end    
 
     return to_return
   end
