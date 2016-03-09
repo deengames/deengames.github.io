@@ -9,7 +9,7 @@
   - For Windows/Linux/Mac games, you specify the executable file. Copy it to `data/games/@platform`
   - For Android games, you specify the ID for Google Play
   - For iOS games, I don't know.
-  - For Silverlight games, stop, and use something else. Or specify the XAP filename and copy it to `data/games/silverlight`
+  - For Silverlight games, stop, and use something else. Specify the XAP filename and size `{ xap: ..., width: ..., height: ... }` and copy it to `data/games/silverlight`
 - Create an image in `data/images/<game name>.png`. This image should be 450x278. (It's scaled down when not featured.)
 - run `rake`.
 - Verify results locally. If it works, push.
