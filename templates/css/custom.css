@@ -16,3 +16,7 @@ iframe {
   border: none;
   overflow: hidden;
 }
+
+.screenshot {
+    padding: 4px;
+}

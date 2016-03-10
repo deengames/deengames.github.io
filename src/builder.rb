@@ -107,7 +107,7 @@ class Builder
         scale = [1.0 * MAX_SCREENSHOT_SIZE / native_size[0],  1.0 * MAX_SCREENSHOT_SIZE / native_size[1], 1].min
         scale_w = (scale * native_size[0]).to_i
         scale_h = (scale * native_size[1]).to_i
-        ss_html = "#{ss_html}<img src='#{url}' width='#{scale_w}' height='#{scale_h}' data-jslghtbx='#{url}' />"
+        ss_html = "#{ss_html}<img src='#{url}' width='#{scale_w}' height='#{scale_h}' data-jslghtbx='#{url}' class='screenshot' />"
       end
       template = template.gsub('@screenshots', ss_html)
       html = html.gsub('@screenshots', template)
