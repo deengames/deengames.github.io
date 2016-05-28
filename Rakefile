@@ -24,4 +24,4 @@ task :publish do
 end
 
 # set default task: build the website
-task :default => ['clean', 'build', 'publish']
+task :default => ['clean', 'build']

@@ -14,6 +14,7 @@ class Builder
   STATIC_PAGES_DIR = "#{DATA_DIR}/static_pages"
   IMAGES_DIR = "#{DATA_DIR}/images"
   GAMES_DIR = "#{DATA_DIR}/games"
+  GUIDES_DIR = "#{DATA_DIR}/guides"
 
   TEMPLATE_DIRECTORY = 'templates'
   # We copy the template dir. But not these items.
@@ -66,6 +67,7 @@ class Builder
       FileUtils.rm_rf exclusion
     end
     FileUtils.cp_r GAMES_DIR, OUTPUT_DIR
+    FileUtils.cp_r GUIDES_DIR, OUTPUT_DIR
 
     generate_master_page
     generate_static_pages
@@ -87,10 +89,20 @@ class Builder
       html = get_downloadable_platforms_html(g, html)
       html = get_mobile_links(g, html)
       html = get_screenshots(g, html)
+      html = get_educators_guide(g, html)
       final_html = @master_page_html.sub(CONTENT_PLACEHOLDER, html).gsub('@title', g['name'])
       filename = url_for_game(g)
       File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
     end
+  end
+ 
+  def get_educators_guide(g, html)
+    link = ''
+    if !g['educators_guide'].nil?
+      link = "<br /><a href='guides/#{g['educators_guide']}'><img src='images/educators_guide.svg' width='32' height='32' /> Parents/Educators Guide</a>";
+    end
+    html = html.gsub('@educators_guide', link)
+    return html
   end
 
   # Replace @screenshots with screenshots
@@ -258,7 +270,7 @@ class Builder
       File.write("#{OUTPUT_DIR}/#{page_name}.html", html)
     end
 
-    puts "Generated #{@pages.count} pages."
+    puts "Generated #{@games.count} games and #{@pages.count} static pages."
   end
 
   # Generates the "master page" which contains all the common information
