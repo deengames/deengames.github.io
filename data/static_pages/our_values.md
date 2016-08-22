@@ -14,4 +14,4 @@ Finally, we work hard to make sure everything is within the acceptable framework
 
 We research different issues and consult with scholars to find out the right path. Because if it's not Islamic, it's not wanted here.
 
-And that's Deen Games. We also occasionally post some interesting, development-centric information on [our wiki](http://sites.google.com/site/deengames). It may be outdated, though.
+And that's Deen Games.
