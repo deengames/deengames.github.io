@@ -14,7 +14,7 @@
       "version": "1.0.0",
       "screenshot": "owlicious.png",
       "blurb": "Owlicious is a short, interactive book-like experience for grade one students (children aged 6-7) which aligns with some values from the Ontario Science and Tech curriculum. Join Owlicious the owl on his journey to find a new home and discover delicious new prey to eat!",
-      "published": "2016-10-26",
+      "published": "2016-05-27",
       "platforms": [ { "android": "com.deengames.owlicious" }, { "flash": { "swf": "owlicious.swf", "width": 1024, "height": 576  } } ],
       "screenshots": [ "owlicious-1.png", "owlicious-2.png", "owlicious-3.png"],
       "educators_guide": "owlicious.pdf"
