@@ -1,4 +1,6 @@
+import io
 import json
+import time
 
 # Extensions
 import markdown
@@ -34,20 +36,22 @@ class Builder:
   MAX_SCREENSHOT_SIZE = 250
 
   def build(self):
-    start = Time.new
+    start = time.time()
     self.verify_files_exist()
     self.__load_data()
     self.generate_site()
-    stop = Time.new
-    print("Done in #{stop - start} seconds.")
+    stop = time.time()
+    print("Done in {0} seconds.").format(stop - start)
   end
 
   def __load_data(self):
-    self.games = JSON.parse(File.read(DATABASE_FILE))['games'].sort! {
-      # sort by publication date, reverse chronologically
-      |x, y| Time.parse(y['published']) <=> Time.parse(x['published'])
-    }
-    raise 'JSON structure changed; where is the top-level "games" list?' if self.games.None?
+    with open(DATABASE_FILE) as f:
+        raw_json = f.read()
+
+    # sort by publication date, reverse chronologically
+    self.games = json.load(raw_json)['games'].sort(key = lambda x: x["published"], reverse = True)
+    if self.games == None:
+        raise(Exception('JSON structure changed; where is the top-level "games" list?'))
   end
 
   def __verify_files_exist(self):
@@ -129,7 +133,7 @@ class Builder:
     links_html = ''
     mobile_data = platform_data(g, ['android']) #TODO: iOS
     if !mobile_data.empty?
-      mobile_data.each do |platform, data|
+      for platform, data in mobile_data.items():
         link_target = "#{GOOGLE_PLAY_PATH}#{data}"
         links_html += "<a href='#{link_target}'><img src='images/google-play-badge.png' /></a>"
       end
@@ -147,7 +151,7 @@ class Builder:
     downloads_html = ''
 
     if !downloadable_data.empty?
-      downloadable_data.each do |platform, data|
+      for platform, data in downloadable_data.items():
         root_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
         url = "#{root_dir}/#{platform}/#{data}"
         name = "#{platform.capitalize} version"
@@ -219,8 +223,8 @@ class Builder:
       game_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
 
       platform_html = ""
-      g['platforms'].each do |platform_data|
-        platform_data.each do |platform, data|
+      for platform_data in g['platforms']:
+        for platform, data in platform_data.items():
           # windows/linux: value = executable
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
@@ -316,8 +320,8 @@ class Builder:
   def __platform_data(g, target_platforms)
     to_return = {}
 
-    g['platforms'].each do |platform_data|
-      platform_data.each do |platform, data|
+    for platform_data in g['platforms']:
+      for platform, data in platform_data.items():
         # if you specify both, returns the first one found
         if target_platforms.include?(platform)
             to_return[platform.to_sym] = data
@@ -333,7 +337,7 @@ class Builder:
   # privacy_policy => Privacy Policy
   # who_is_that_person => Who is that Person
   def __to_title(sentence)
-    stop_words = %w{a an and the or for of nor} #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
+    stop_words = ['a', 'an', 'and', 'the', 'or', 'for', 'of', 'nor'] #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
     sentence.replace('_', ' ').split.each_with_index.map{|word, index| stop_words.include?(word) && index > 0 ? word : word.capitalize }.join(" ")
   end
 end
