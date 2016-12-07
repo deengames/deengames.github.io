@@ -13,12 +13,18 @@ The goal is not a 100%-automated process that produces terrible (or beautiful) c
 - Replace `require` calls for gems to `import` calls for pip packages. We can do something here to help auto-map (eg. `kramdown` => `markdown`)
 - Replace `def (a-zA-Z0-9_-)*` with `def \1:`. Ditto for `class`. Even though the colon is optional.
 - Figure out if we're in a class (`class ...` near the top of the file). If so, apply class-specific rules.
-- Replace nil with None
+- Replace nil with None. Replace `x.None?` with `if x == None`
 - Replace true with True and false with false
-- `Blah.each do |n|` with `for n in Blah:`. UNLESS there's a bracket between the pipes.
-- Some easy stuff, like x.gsub => x.replace
+- `Blah.each do |n|` with `for n in Blah:`. UNLESS there's a bracket between the pipes. But, what to do with "end" statements? :/
+- `raise "..."` with `raise(Exception("..."))` 
+- :x => "x"
 
-# Class-Specific Rules
+## Standard Library mappings
+- String: `x.gsub` => `x.replace`
+- Files: `File.exist?` with `os.path.isfile(...)`, `Dir.exist?` with `os.path.isdir(...)`
+
+
+## Class-Specific Rules
 - Replace any `def` after `private` with `def __`.
 - For any `def`, add a first argument of `self`.
 - Replace `@<alphanumeric>` with `self.\1`

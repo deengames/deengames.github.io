@@ -1,5 +1,7 @@
 import io
 import json
+import os.path
+import shutil
 import time
 
 # Extensions
@@ -55,18 +57,19 @@ class Builder:
   end
 
   def __verify_files_exist(self):
-    raise "#{DATABASE_FILE} not found" unless File.exist?(DATABASE_FILE)
-    raise "#{TEMPLATE_DIRECTORY} directory not found" unless Dir.exist?(TEMPLATE_DIRECTORY)
+    if not os.path.isfile(DATABASE_FILE):
+        raise(Exception("#{DATABASE_FILE} not found"))
+    if not os.path.isdir(TEMPLATE_DIRECTORY):
+        raise(Exception("#{TEMPLATE_DIRECTORY} directory not found"))
   end
 
   def __generate_site(self):
     # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
-    FileUtils.cp_r "#{TEMPLATE_DIRECTORY}/.", OUTPUT_DIR
-    for exclusion in TEMPLATE_EXCLUSIONS:
-      FileUtils.rm_rf exclusion
-    end
-    FileUtils.cp_r GAMES_DIR, OUTPUT_DIR
-    FileUtils.cp_r GUIDES_DIR, OUTPUT_DIR
+    distutils.dir_util.copy_tree("#{TEMPLATE_DIRECTORY}/.", OUTPUT_DIR)
+    for exclusion in TEMPLATE_EXCLUSIONS:        
+        shutil.rmtree(exclusion)          
+    distutils.dir_util.copy_tree(GAMES_DIR, OUTPUT_DIR)
+    distutils.dir_util.copy_tree(GUIDES_DIR, OUTPUT_DIR)
 
     generate_master_page
     generate_static_pages
@@ -76,11 +79,13 @@ class Builder:
 
   def __generate_game_pages(self):
     for g in self.games:
-      html = File.read("#{GAME_PAGE_TEMPLATE}")
-      html = html
-        .replace('@name', g['name'])
-        .replace('@blurb', g['blurb'])
-        .replace('@version', g['version'] || '1.0.0')
+      html = File.read(GAME_PAGE_TEMPLATE)
+
+      version = '1.0.0'      
+      if 'version' in g:
+          version = g['version']
+
+      html = html.replace('@name', g['name']).replace('@blurb', g['blurb']).replace('@version', version)
 
       # Start adding per-platform HTML
       # For HTML5 and Flash, add in-page game playing
@@ -89,15 +94,17 @@ class Builder:
       html = get_mobile_links(g, html)
       html = get_screenshots(g, html)
       html = get_educators_guide(g, html)
-      final_html = self.master_page_html.sub(CONTENT_PLACEHOLDER, html).replace('@title', g['name'])
+      final_html = self.master_page_html.replace(CONTENT_PLACEHOLDER, html).replace('@title', g['name'])
       filename = url_for_game(g)
-      File.open("#{OUTPUT_DIR}/#{filename}", 'w') { |f| f.write(final_html) }
-    end
+
+      with open("{0}/{1}".format(OUTPUT_DIR, filename)) as f:
+          f.write(final_html)
+
   end
  
-  def __get_educators_guide(self, g, html)
+  def __get_educators_guide(self, g, html):
     link = ''
-    if !g['educators_guide'].None?
+    if 'educators_guide' in g:
       link = "<br /><a href='guides/#{g['educators_guide']}'><img src='images/educators_guide.svg' width='32' height='32' /> Parents/Educators Guide</a>";
     end
     html = html.replace('@educators_guide', link)
@@ -105,82 +112,84 @@ class Builder:
   end
 
   # Replace @screenshots with screenshots
-  def __get_screenshots(self, g, html)
-    if !g['screenshots'].None?
+  def __get_screenshots(self, g, html):
+    if 'screenshots' in g:
       template = File.read(SCREENSHOTS_SNIPPET)
-      name = url_for_game(g).sub('.html', '')
+      name = url_for_game(g).replace('.html', '')
       ss_html = ''
       for s in g['screenshots']:
         url = "images/#{name}/#{s}"
         native_size = FastImage.size("data/#{url}") # [w, h]
-        raise "Can't get native size of images/#{name}/#{s}" if native_size.None?
+        if native_size == None:
+            raise(Exception("Can't get native size of images/#{name}/#{s}"))
         # Scale to 250px. Unless the image is already smaller. Then don't scale.
         scale = [1.0 * MAX_SCREENSHOT_SIZE / native_size[0],  1.0 * MAX_SCREENSHOT_SIZE / native_size[1], 1].min
         scale_w = (scale * native_size[0]).to_i
         scale_h = (scale * native_size[1]).to_i
         ss_html = "#{ss_html}<img src='#{url}' width='#{scale_w}' height='#{scale_h}' data-jslghtbx='#{url}' class='screenshot' />"
-      end
       template = template.replace('@screenshots', ss_html)
       html = html.replace('@screenshots', template)
-    else
+    else:
       html = html.replace('@screenshots', '')
-    end
+
     return html
   end
 
   # Modifies "html": replaces @mobile with mobile links
-  def __get_mobile_links(self, g, html)
+  def __get_mobile_links(self, g, html):
     links_html = ''
-    mobile_data = platform_data(g, ['android']) #TODO: iOS
-    if !mobile_data.empty?
+    mobile_data = __platform_data(g, ['android']) #TODO: iOS
+    if not mobile_data: # empty?
       for platform, data in mobile_data.items():
         link_target = "#{GOOGLE_PLAY_PATH}#{data}"
         links_html += "<a href='#{link_target}'><img src='images/google-play-badge.png' /></a>"
-      end
+      
       html = html.replace('@mobile', links_html)
-    else
+    else:
       html = html.replace('@mobile', '')
-    end
+    
     return html
   end
 
   # Modifies "html": replaces @downloads with download links
-  def __get_downloadable_platforms_html(self, g, html)
-    downloadable_data = platform_data(g, ['windows', 'linux', 'mac'])
+  def __get_downloadable_platforms_html(self, g, html):
+    downloadable_data = __platform_data(g, ['windows', 'linux', 'mac'])
     template = File.read("#{TEMPLATE_DIRECTORY}/snippets/download_game.html")
     downloads_html = ''
 
-    if !downloadable_data.empty?
+    if not downloadable_data: #empty?
       for platform, data in downloadable_data.items():
-        root_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
+        root_dir = GAMES_DIR.replace("#{DATA_DIR}/", '')
         url = "#{root_dir}/#{platform}/#{data}"
         name = "#{platform.capitalize} version"
         downloads_html = "#{downloads_html}#{template.replace('@url', url).replace('@name', name)}"
-      end
-    end
+      
+    
 
     # If we have something to download, show the download section.
-    if !downloads_html.empty?
+    if not downloads_html: #empty?
       downloads_section = File.read("#{TEMPLATE_DIRECTORY}/snippets/downloads.html")
-      downloads_section.sub!('@html', downloads_html)
-      html = html.sub('@downloads', downloads_section)
-    else
-      html = html.sub('@downloads', '')
-    end
+      downloads_section = downloads_section.replace('@html', downloads_html)
+      html = html.replace('@downloads', downloads_section)
+      html = html.replace('@downloads', '')
 
     return html
   end
 
   # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
-  def __get_inpage_platforms_html(self, g, html)
-    in_page_data = platform_data(g, ['flash', 'html5', 'silverlight'])
+  def __get_inpage_platforms_html(self, g, html):
+    in_page_data = __platform_data(g, ['flash', 'html5', 'silverlight'])
 
-    if !in_page_data.empty?
-      data = in_page_data[:html5] || in_page_data[:flash] || in_page_data[:silverlight]  # html5 first, then flash -- not both
-      platform = :html5 if in_page_data.key?(:html5)
-      platform = :flash if in_page_data.key?(:flash)
-      platform = :silverlight if in_page_data.key?(:silverlight)
-      throw "Not sure how to process platform: #{in_page_data}" if platform.None?
+    if not in_page_data: #empty?
+      data = in_page_data["html5"] or in_page_data["flash"] or in_page_data["silverlight"]  # html5 first, then flash -- not both
+      if "html5" in in_page_data:
+          platform = "html5" 
+      if "flash" in in_page_data:
+          platform = "flash"
+      if "silverlight" in in_page_data:
+        platform = "silverlight" 
+      if platform == None:
+        raise(Exception("Not sure how to process platform: #{in_page_data}"))
       
       # Common to flash/html5/silverlight
       template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
@@ -188,21 +197,20 @@ class Builder:
       template = template.replace('@height', data['height'].to_s)
       
 
-      if platform == :flash
+      if platform == "flash":
         template = template.replace('@swf', "games/flash/#{data['swf']}")
-      elsif platform == :html5
+      elif platform == "html5":
         template = template.replace('@folder', data['folder'])
-      elsif platform == :silverlight
+      elif platform == "silverlight":
         template = template.replace('@xap', "games/silverlight/#{data['xap']}")
-      else
-        raise "Not sure how to get in-page data for #{platform}"
-      end
-      html = html.sub('@game', template)
-    else
+      else:
+        raise(Exception("Not sure how to get in-page data for #{platform}"))
+      
+      html = html.replace('@game', template)
+    else:
       # get rid of @game if it's still around
       html = html.replace('@game', '')
-    end
-
+    
     return html
   end
 
@@ -212,15 +220,16 @@ class Builder:
     platform_html = ''
 
     for g in self.games:
-      is_featured = g == self.games[0] || g == self.games[1]
-      column_size = is_featured ? 6 : 4 # featured = half-screen, otherwise one-third
+      is_featured = g == self.games[0] or g == self.games[1]
+      column_size = 6 if is_featured else 4 # featured = half-screen, otherwise one-third
       # Regardless of extension, add size
       filename = g['screenshot']
 
       game_image = "#{IMAGES_DIR}/#{filename}"
-      raise "Can't find image #{g['screenshot']} for #{g['name']} in #{IMAGES_DIR}" unless File.exist?(game_image)
-      html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.sub('data/', '')}' /></a>"
-      game_dir = GAMES_DIR.sub("#{DATA_DIR}/", '')
+      if not os.path.isfile(game_image):
+        raise(Exception("Can't find image {0} for {1} in {2}".format(g['screenshot'], g['name'], IMAGES_DIR)))
+      html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.replace('data/', '')}' /></a>"
+      game_dir = GAMES_DIR.replace("{0}/".format(DATA_DIR), '')
 
       platform_html = ""
       for platform_data in g['platforms']:
@@ -229,46 +238,49 @@ class Builder:
           # android: value = google play ID
           # flash: value = { :width, :height, :swf }
           # silverlight: value = xap file
-          link_target = "#{game_dir}/#{platform}/#{data}" if ['windows', 'linux'].include?(platform)
-          link_target = "#{GOOGLE_PLAY_PATH}#{data}" if platform == 'android'
-          link_target = url_for_game(g) if ['flash', 'html5', 'silverlight'].include?(platform)
+          if 'windows' in platform or 'linux' in platform:
+            link_target = "#{game_dir}/#{platform}/#{data}"
+          elif 'android' in platform:
+            link_target = "#{GOOGLE_PLAY_PATH}#{data}"
+          elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
+            link_target = url_for_game(g)
+          else:
+            raise(Exception("Not sure what the link target is for {0}".format(platform)))
           
-          ext = platform == 'silverlight' ? 'png' : 'svg'
+          ext = ('png' if platform == 'silverlight' else 'svg')
           platform_html = "#{platform_html}<a href='#{link_target}'><img src='images/#{platform}.#{ext}' width='32' height='32' /></a>"
-        end
-      end
 
       # Compose final HTML
       final_html = "<div class='col-sm-#{column_size}'>#{html}<br />#{platform_html}</div>"
 
-      if (is_featured)
+      if is_featured:
         featured_html = "#{featured_html}#{final_html}"
-      else
+      else:
         regular_html = "#{regular_html}#{final_html}"
-      end
-    end
 
-    featured_html = File.read(JUMBOTRON_SNIPPET).sub('@content', featured_html)
+    featured_html = File.read(JUMBOTRON_SNIPPET).replace('@content', featured_html)
     html = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
-    html = self.master_page_html.sub(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}").replace('@title', 'Home')
+    html = self.master_page_html.replace(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}").replace('@title', 'Home')
     File.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
-    FileUtils.cp_r "#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images"
+    distutils.dir_util.copy_tree("#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images")
   end
 
   # Generates static pages from data/static_pages/*.md
   # Converts them into HTML, links them in the header
   def __generate_static_pages(self):
-    raise 'Pages are not defined!' if self.pages.None?
+    if self.pages == None:
+        raise(Exception('Pages are not defined!'))
 
     for p in self.pages:
-      markdown = File.read(p)
-      to_html = Kramdown::Document.new(markdown).to_html
-      html = self.master_page_html.sub(CONTENT_PLACEHOLDER, to_html).replace('@title', to_title(get_page_name(p)))
+      raw_markdown = File.read(p)
+      to_html = markdown.markdown(raw_markdown)
+      html = self.master_page_html.replace(CONTENT_PLACEHOLDER, to_html).replace('@title', to_title(get_page_name(p)))
       page_name = get_page_name(p)
-      File.write("#{OUTPUT_DIR}/#{page_name}.html", html)
-    end
 
-    puts "Generated #{self.games.count} games and #{self.pages.count} static pages."
+      with open("{0}/{1}.html".format(OUTPUT_DIR, page_name)) as f:
+          f.write(html)
+
+    print("Generated #{self.games.count} games and #{self.pages.count} static pages.")
   end
 
   # Generates the "master page" which contains all the common information
@@ -288,7 +300,7 @@ class Builder:
       page_name = get_page_name(page)
       html = navbar_template.replace('@url', "#{page_name}.html").replace('@title', to_title(page_name))
       links_html = "#{links_html}#{html}"
-    end
+    
 
     self.master_page_html = index_page.replace(NAVBAR_LINKS_PLACEHOLDER, links_html)
   end
@@ -306,7 +318,7 @@ class Builder:
 
   # g => { :name => 'Quest for the Royal Jelly'}
   # return: quest-for-the-royal-jelly.html
-  def __url_for_game(g)
+  def __url_for_game(g):
     name = g['name']
     name = name.replace(' ', '-').replace('_', '-').replace("'", "").downcase.strip.chomp
     return "#{name}.html"
@@ -317,17 +329,14 @@ class Builder:
   # HTML5, Flash, and Silverlight need to be shown in-page.
   # Windows, Linux, and Mac need a download link.
   # Returns an array, eg. {:windows => ..., :linux => ...}
-  def __platform_data(g, target_platforms)
+  def __platform_data(g, target_platforms):
     to_return = {}
 
     for platform_data in g['platforms']:
       for platform, data in platform_data.items():
         # if you specify both, returns the first one found
-        if target_platforms.include?(platform)
+        if platform in target_platforms:
             to_return[platform.to_sym] = data
-        end
-      end
-    end    
 
     return to_return
   end
@@ -336,8 +345,13 @@ class Builder:
 
   # privacy_policy => Privacy Policy
   # who_is_that_person => Who is that Person
-  def __to_title(sentence)
+  def __to_title(sentence):
     stop_words = ['a', 'an', 'and', 'the', 'or', 'for', 'of', 'nor'] #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
-    sentence.replace('_', ' ').split.each_with_index.map{|word, index| stop_words.include?(word) && index > 0 ? word : word.capitalize }.join(" ")
+    words = sentence.replace('_', ' ').split()
+    
+    for word in words:
+        word = word.capitalize() if word in stop_words else word
+
+    return ', '.join([str(w) for w in words]) 
   end
 end
