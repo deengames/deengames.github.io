@@ -339,8 +339,10 @@ class Builder:
     def __to_title(sentence):
         stop_words = ['a', 'an', 'and', 'the', 'or', 'for', 'of', 'nor'] #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
         words = sentence.replace('_', ' ').split()
-        
-        for word in words:
-                word = word.capitalize() if word in stop_words else word
 
-        return ', '.join([str(w) for w in words]) 
+        title = ""
+        for word in words:
+            if word not in stop_words:
+                word = word.capitalize()
+            title = "{0}{1} ".format(title, word)
+        return title.strip()
