@@ -18,14 +18,24 @@ The goal is not a 100%-automated process that produces terrible (or beautiful) c
 - `Blah.each do |n|` with `for n in Blah:`. UNLESS there's a bracket between the pipes. 
 - Delete lines that are just `end` with whitespace.
 - `raise "..."` with `raise(Exception("..."))` 
-- :x => "x"
+- `:x` => `"x"` and get rid of `to_sym` calls
+- Any strings like with `"#{blah}"` tokens should be replaced with `"{0}".format(...)`
+- `x.to_str` => `str(x)`
+- `x.to_i` => `int(i)`
 
 ## Standard Library mappings
-- String: `x.gsub` => `x.replace`
-- Files: `File.exist?` with `os.path.isfile(...)`, `Dir.exist?` with `os.path.isdir(...)`
+- `x.gsub` => `x.replace` (string)
+- `File.exist?` with `os.path.isfile(...)`, `Dir.exist?` with `os.path.isdir(...)` (File/Dir)
+- `downcase` => `lower()` and `upcase` => `upper()` (string)
 
 
 ## Class-Specific Rules
 - Replace any `def` after `private` with `def __`.
 - For any `def`, add a first argument of `self`.
 - Replace `@<alphanumeric>` with `self.\1`
+
+## Do These By Hand
+
+Alert the user.
+
+- `File.read` and `File.write` can turn into `with` blocks, unless you're assigning it to a variable, which gets complicated.
