@@ -2,7 +2,7 @@ import distutils.dir_util
 import glob
 import io
 import json
-import os.path
+import os
 import shutil
 import time
 
@@ -20,8 +20,8 @@ class Builder:
     DATABASE_FILE = "{0}/games.json".format(DATA_DIR)
     STATIC_PAGES_DIR = "{0}/static_pages".format(DATA_DIR)
     IMAGES_DIR = "{0}/images".format(DATA_DIR)
-    GAMES_DIR = "{0}/games".format(DATA_DIR)
-    GUIDES_DIR = "{0}/guides".format(DATA_DIR)
+    GAMES_DIR = "games"
+    GUIDES_DIR = "guides"
 
     TEMPLATE_DIRECTORY = 'templates'
     # We copy the template dir. But not these items.
@@ -45,6 +45,7 @@ class Builder:
 
     def build(self):
         start = time.time()
+        shutil.rmtree(Builder.OUTPUT_DIR, True)
         self.__verify_files_exist()
         self.__load_data()
         self.__generate_site()
@@ -70,9 +71,10 @@ class Builder:
         # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
         distutils.dir_util.copy_tree(Builder.TEMPLATE_DIRECTORY, Builder.OUTPUT_DIR)
         for exclusion in Builder.TEMPLATE_EXCLUSIONS:                
-                shutil.rmtree("{0}/{1}".format(Builder.OUTPUT_DIR, exclusion))                    
-        distutils.dir_util.copy_tree(Builder.GAMES_DIR, Builder.OUTPUT_DIR)
-        distutils.dir_util.copy_tree(Builder.GUIDES_DIR, Builder.OUTPUT_DIR)
+            shutil.rmtree("{0}/{1}".format(Builder.OUTPUT_DIR, exclusion), True)
+
+        distutils.dir_util.copy_tree("{0}/{1}".format(Builder.DATA_DIR, Builder.GAMES_DIR), "{0}/{1}".format(Builder.OUTPUT_DIR, Builder.GAMES_DIR))
+        distutils.dir_util.copy_tree("{0}/{1}".format(Builder.DATA_DIR, Builder.GUIDES_DIR), "{0}/{1}".format(Builder.OUTPUT_DIR, Builder.GUIDES_DIR))
 
         self.__generate_master_page()
         self.__generate_static_pages()
@@ -152,8 +154,7 @@ class Builder:
 
         if downloadable_data: # not empty
             for platform, data in downloadable_data.items():
-                root_dir = Builder.GAMES_DIR.replace("{0}/".format(Builder.DATA_DIR), '')
-                url = "{0}/{1}/{2}".format(root_dir, platform, data)
+                url = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
                 name = "{0} version".format(platform.capitalize())
                 downloads_html = "{0}{1}".format(downloads_html, template.replace('@url', url).replace('@name', name))
 
@@ -223,7 +224,6 @@ class Builder:
             if not os.path.isfile(game_image):
                 raise(Exception("Can't find image {2}/{0} for game {1}".format(g['screenshot'], g['name'], Builder.IMAGES_DIR)))
             html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(Builder.__url_for_game(g), game_image.replace('data/', ''))
-            game_dir = Builder.GAMES_DIR.replace("{0}/".format(Builder.DATA_DIR), '')
 
             platform_html = ""
             for platform_data in g['platforms']:
@@ -233,7 +233,7 @@ class Builder:
                     # flash: value = { :width, :height, :swf }
                     # silverlight: value = xap file
                     if 'windows' in platform or 'linux' in platform:
-                        link_target = "{0}/{1}/{2}".format(game_dir, platform, data)
+                        link_target = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
                     elif 'android' in platform:
                         link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
                     elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
