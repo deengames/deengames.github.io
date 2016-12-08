@@ -156,14 +156,13 @@ class Builder:
                 url = "{0}/{1}/{2}".format(root_dir, platform, data)
                 name = "{0} version".format(platform.capitalize())
                 downloads_html = "{0}{1}".format(downloads_html, template.replace('@url', url).replace('@name', name))
-            
-        
 
         # If we have something to download, show the download section.
         if downloads_html: # not empty
             downloads_section = file_io.read("{0}/snippets/downloads.html".format(Builder.TEMPLATE_DIRECTORY))
             downloads_section = downloads_section.replace('@html', downloads_html)
             html = html.replace('@downloads', downloads_section)
+        else:
             html = html.replace('@downloads', '')
 
         return html
