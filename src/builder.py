@@ -26,6 +26,8 @@ class Builder:
     TEMPLATE_DIRECTORY = 'templates'
     # We copy the template dir. But not these items.
     TEMPLATE_EXCLUSIONS = ['snippets']
+    # Copy these from the root to bin
+    INDIVIDUAL_FILES_TO_COPY = ['CNAME', 'favicon.ico']
 
     INDEX_PAGE = 'index.html' # the home index page; this is also the layout.
     NAVBAR_LINKS_PLACEHOLDER = '<!-- DG navbar links -->' # Where the navbar list of pages goes
@@ -45,7 +47,6 @@ class Builder:
 
     def build(self):
         start = time.time()
-        shutil.rmtree(Builder.OUTPUT_DIR, True)
         self.__verify_files_exist()
         self.__load_data()
         self.__generate_site()
@@ -59,19 +60,26 @@ class Builder:
         self.games = json.loads(raw_json)['games']
         self.games.sort(key = lambda x: x["published"], reverse = True)
         if self.games == None:
-                raise(Exception('JSON structure changed; where is the top-level "games" list?'))
+            raise(Exception('JSON structure changed; where is the top-level "games" list?'))
 
     def __verify_files_exist(self):
         if not os.path.isfile(Builder.DATABASE_FILE):
-                raise(Exception("{0} not found").format(DATABASE_FILE))
+            raise(Exception("{0} not found").format(DATABASE_FILE))
         if not os.path.isdir(Builder.TEMPLATE_DIRECTORY):
-                raise(Exception("{0} directory not found".format(TEMPLATE_DIRECTORY)))
+            raise(Exception("{0} directory not found".format(TEMPLATE_DIRECTORY)))
 
     def __generate_site(self):
+        # Delete the old output (clean build)
+        shutil.rmtree(Builder.OUTPUT_DIR, True)
+        
         # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
         distutils.dir_util.copy_tree(Builder.TEMPLATE_DIRECTORY, Builder.OUTPUT_DIR)
         for exclusion in Builder.TEMPLATE_EXCLUSIONS:                
             shutil.rmtree("{0}/{1}".format(Builder.OUTPUT_DIR, exclusion), True)
+
+        # Copy individual files
+        for item in Builder.INDIVIDUAL_FILES_TO_COPY:
+            shutil.copyfile(item, "{0}/{1}".format(Builder.OUTPUT_DIR, item))
 
         distutils.dir_util.copy_tree("{0}/{1}".format(Builder.DATA_DIR, Builder.GAMES_DIR), "{0}/{1}".format(Builder.OUTPUT_DIR, Builder.GAMES_DIR))
         distutils.dir_util.copy_tree("{0}/{1}".format(Builder.DATA_DIR, Builder.GUIDES_DIR), "{0}/{1}".format(Builder.OUTPUT_DIR, Builder.GUIDES_DIR))
