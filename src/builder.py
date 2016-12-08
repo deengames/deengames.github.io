@@ -1,8 +1,13 @@
+import distutils.dir_util
+import glob
 import io
 import json
 import os.path
 import shutil
 import time
+
+# Custom code
+import src.file_io as file_io
 
 # Extensions
 import markdown
@@ -39,47 +44,43 @@ class Builder:
 
   def build(self):
     start = time.time()
-    self.verify_files_exist()
+    self.__verify_files_exist()
     self.__load_data()
-    self.generate_site()
+    self.__generate_site()
     stop = time.time()
     print("Done in {0} seconds.").format(stop - start)
-  end
 
   def __load_data(self):
-    with open(DATABASE_FILE) as f:
-        raw_json = f.read()
+    raw_json = file_io.read(Builder.DATABASE_FILE)
 
     # sort by publication date, reverse chronologically
-    self.games = json.load(raw_json)['games'].sort(key = lambda x: x["published"], reverse = True)
+    self.games = json.loads(raw_json)['games']
+    self.games.sort(key = lambda x: x["published"], reverse = True)
     if self.games == None:
         raise(Exception('JSON structure changed; where is the top-level "games" list?'))
-  end
 
   def __verify_files_exist(self):
-    if not os.path.isfile(DATABASE_FILE):
+    if not os.path.isfile(Builder.DATABASE_FILE):
         raise(Exception("#{DATABASE_FILE} not found"))
-    if not os.path.isdir(TEMPLATE_DIRECTORY):
+    if not os.path.isdir(Builder.TEMPLATE_DIRECTORY):
         raise(Exception("#{TEMPLATE_DIRECTORY} directory not found"))
-  end
 
   def __generate_site(self):
     # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
-    distutils.dir_util.copy_tree("#{TEMPLATE_DIRECTORY}/.", OUTPUT_DIR)
-    for exclusion in TEMPLATE_EXCLUSIONS:        
-        shutil.rmtree(exclusion)          
-    distutils.dir_util.copy_tree(GAMES_DIR, OUTPUT_DIR)
-    distutils.dir_util.copy_tree(GUIDES_DIR, OUTPUT_DIR)
+    distutils.dir_util.copy_tree(Builder.TEMPLATE_DIRECTORY, Builder.OUTPUT_DIR)
+    for exclusion in Builder.TEMPLATE_EXCLUSIONS:        
+        shutil.rmtree("{0}/{1}".format(Builder.OUTPUT_DIR, exclusion))          
+    distutils.dir_util.copy_tree(Builder.GAMES_DIR, Builder.OUTPUT_DIR)
+    distutils.dir_util.copy_tree(Builder.GUIDES_DIR, Builder.OUTPUT_DIR)
 
-    generate_master_page
-    generate_static_pages
-    generate_front_page_game_entries
-    generate_game_pages
-  end
+    self.__generate_master_page()
+    self.__generate_static_pages()
+    self.__generate_front_page_game_entries()
+    self.__generate_game_pages()
 
   def __generate_game_pages(self):
     for g in self.games:
-      html = File.read(GAME_PAGE_TEMPLATE)
+      html = file_io.read(Builder.GAME_PAGE_TEMPLATE)
 
       version = '1.0.0'      
       if 'version' in g:
@@ -97,10 +98,7 @@ class Builder:
       final_html = self.master_page_html.replace(CONTENT_PLACEHOLDER, html).replace('@title', g['name'])
       filename = url_for_game(g)
 
-      with open("{0}/{1}".format(OUTPUT_DIR, filename)) as f:
-          f.write(final_html)
-
-  end
+      file_io.write("{0}/{1}".format(OUTPUT_DIR, filename), final_html)
  
   def __get_educators_guide(self, g, html):
     link = ''
@@ -109,12 +107,11 @@ class Builder:
     end
     html = html.replace('@educators_guide', link)
     return html
-  end
 
   # Replace @screenshots with screenshots
   def __get_screenshots(self, g, html):
     if 'screenshots' in g:
-      template = File.read(SCREENSHOTS_SNIPPET)
+      template = file_io.read(SCREENSHOTS_SNIPPET)
       name = url_for_game(g).replace('.html', '')
       ss_html = ''
       for s in g['screenshots']:
@@ -133,7 +130,6 @@ class Builder:
       html = html.replace('@screenshots', '')
 
     return html
-  end
 
   # Modifies "html": replaces @mobile with mobile links
   def __get_mobile_links(self, g, html):
@@ -149,12 +145,11 @@ class Builder:
       html = html.replace('@mobile', '')
     
     return html
-  end
 
   # Modifies "html": replaces @downloads with download links
   def __get_downloadable_platforms_html(self, g, html):
     downloadable_data = __platform_data(g, ['windows', 'linux', 'mac'])
-    template = File.read("#{TEMPLATE_DIRECTORY}/snippets/download_game.html")
+    template = file_io.read("#{TEMPLATE_DIRECTORY}/snippets/download_game.html")
     downloads_html = ''
 
     if not downloadable_data: #empty?
@@ -168,13 +163,12 @@ class Builder:
 
     # If we have something to download, show the download section.
     if not downloads_html: #empty?
-      downloads_section = File.read("#{TEMPLATE_DIRECTORY}/snippets/downloads.html")
+      downloads_section = file_io.read("#{TEMPLATE_DIRECTORY}/snippets/downloads.html")
       downloads_section = downloads_section.replace('@html', downloads_html)
       html = html.replace('@downloads', downloads_section)
       html = html.replace('@downloads', '')
 
     return html
-  end
 
   # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
   def __get_inpage_platforms_html(self, g, html):
@@ -192,7 +186,7 @@ class Builder:
         raise(Exception("Not sure how to process platform: #{in_page_data}"))
       
       # Common to flash/html5/silverlight
-      template = File.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
+      template = file_io.read("#{TEMPLATE_DIRECTORY}/snippets/#{platform}.html")
       template = template.replace('@width', data['width'].to_s)
       template = template.replace('@height', data['height'].to_s)
       
@@ -212,7 +206,6 @@ class Builder:
       html = html.replace('@game', '')
     
     return html
-  end
 
   def __generate_front_page_game_entries(self):
     featured_html = ''
@@ -227,7 +220,7 @@ class Builder:
 
       game_image = "#{IMAGES_DIR}/#{filename}"
       if not os.path.isfile(game_image):
-        raise(Exception("Can't find image {0} for {1} in {2}".format(g['screenshot'], g['name'], IMAGES_DIR)))
+        raise(Exception("Can't find image {0} for {1} in {2}".format(g['screenshot'], g['name'], Builder.IMAGES_DIR)))
       html = "<a href='#{url_for_game(g)}'><img class='img-responsive' src='#{game_image.replace('data/', '')}' /></a>"
       game_dir = GAMES_DIR.replace("{0}/".format(DATA_DIR), '')
 
@@ -258,12 +251,11 @@ class Builder:
       else:
         regular_html = "#{regular_html}#{final_html}"
 
-    featured_html = File.read(JUMBOTRON_SNIPPET).replace('@content', featured_html)
-    html = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
+    featured_html = file_io.read(JUMBOTRON_SNIPPET).replace('@content', featured_html)
+    html = file_io.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
     html = self.master_page_html.replace(CONTENT_PLACEHOLDER, "#{featured_html}#{regular_html}").replace('@title', 'Home')
-    File.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
+    file_io.write("#{OUTPUT_DIR}/#{INDEX_PAGE}", html)
     distutils.dir_util.copy_tree("#{IMAGES_DIR}/.", "#{OUTPUT_DIR}/images")
-  end
 
   # Generates static pages from data/static_pages/*.md
   # Converts them into HTML, links them in the header
@@ -272,38 +264,38 @@ class Builder:
         raise(Exception('Pages are not defined!'))
 
     for p in self.pages:
-      raw_markdown = File.read(p)
+      raw_markdown = file_io.read(p)
       to_html = markdown.markdown(raw_markdown)
-      html = self.master_page_html.replace(CONTENT_PLACEHOLDER, to_html).replace('@title', to_title(get_page_name(p)))
-      page_name = get_page_name(p)
+      html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, to_html).replace('@title', Builder.__to_title(Builder.__get_page_name(p)))
+      page_name = Builder.__get_page_name(p)
 
-      with open("{0}/{1}.html".format(OUTPUT_DIR, page_name)) as f:
-          f.write(html)
+      file_io.write("{0}/{1}.html".format(Builder.OUTPUT_DIR, page_name), html)
 
     print("Generated #{self.games.count} games and #{self.pages.count} static pages.")
-  end
 
   # Generates the "master page" which contains all the common information
   # (eg. header, footer, navbar); content plugs into this. For now, we're
   # using/abusing this by calling it index.html
   def __generate_master_page(self):
     # Get a list of all static pages. We need links for our header.
-    index_page = File.read("#{OUTPUT_DIR}/#{INDEX_PAGE}")
+    index_page = file_io.read("{0}/{1}".format(Builder.OUTPUT_DIR, Builder.INDEX_PAGE))
     # Naively, sort alphabetically. That usually makes sense.
-    self.pages = Dir.glob("#{STATIC_PAGES_DIR}/*.md").sort
-    navbar_template = File.read(NAVBAR_LINK_SNIPPET)
+    self.pages = glob.glob("{0}/*.md".format(Builder.STATIC_PAGES_DIR))
+    self.pages.sort()
+
+    navbar_template = file_io.read(Builder.NAVBAR_LINK_SNIPPET)
+    
     links_html = ''
 
     for page in self.pages:
       # Create the header link for this page
       # Creates relative links. This is okay, since our site is flat (no subdirectories)
-      page_name = get_page_name(page)
-      html = navbar_template.replace('@url', "#{page_name}.html").replace('@title', to_title(page_name))
+      page_name = Builder.__get_page_name(page)
+      html = navbar_template.replace('@url', "#{page_name}.html").replace('@title', Builder.__to_title(page_name))
       links_html = "#{links_html}#{html}"
     
 
-    self.master_page_html = index_page.replace(NAVBAR_LINKS_PLACEHOLDER, links_html)
-  end
+    self.master_page_html = index_page.replace(Builder.NAVBAR_LINKS_PLACEHOLDER, links_html)
 
 ### start: make a Game class and put these inside
 
@@ -312,9 +304,8 @@ class Builder:
   def __get_page_name(markdown_filename):
     name_start = markdown_filename.rindex('/') + 1
     name_stop = markdown_filename.rindex('.md')
-    page_name = markdown_filename[name_start, name_stop - name_start]
+    page_name = markdown_filename[name_start:name_stop]
     return page_name
-  end
 
   # g => { :name => 'Quest for the Royal Jelly'}
   # return: quest-for-the-royal-jelly.html
@@ -322,7 +313,6 @@ class Builder:
     name = g['name']
     name = name.replace(' ', '-').replace('_', '-').replace("'", "").downcase.strip.chomp
     return "#{name}.html"
-  end
 
   # Get all datapoints for specific platforms. If you pass in (g, ['windows', 'linux']),
   # you'll get data for both windows and linux (if they're both there).
@@ -339,7 +329,6 @@ class Builder:
             to_return[platform.to_sym] = data
 
     return to_return
-  end
 
 ### end: make a Game class and put these inside
 
@@ -353,5 +342,3 @@ class Builder:
         word = word.capitalize() if word in stop_words else word
 
     return ', '.join([str(w) for w in words]) 
-  end
-end

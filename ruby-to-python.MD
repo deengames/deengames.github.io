@@ -15,7 +15,8 @@ The goal is not a 100%-automated process that produces terrible (or beautiful) c
 - Figure out if we're in a class (`class ...` near the top of the file). If so, apply class-specific rules.
 - Replace nil with None. Replace `x.None?` with `if x == None`
 - Replace true with True and false with false
-- `Blah.each do |n|` with `for n in Blah:`. UNLESS there's a bracket between the pipes. But, what to do with "end" statements? :/
+- `Blah.each do |n|` with `for n in Blah:`. UNLESS there's a bracket between the pipes. 
+- Delete lines that are just `end` with whitespace.
 - `raise "..."` with `raise(Exception("..."))` 
 - :x => "x"
 
