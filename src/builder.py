@@ -107,9 +107,9 @@ class Builder:
 
             # Start adding per-platform HTML
             # For HTML5 and Flash, add in-page game playing
-            html = Builder.__get_inpage_platforms_html(g, html)
-            html = Builder.__get_downloadable_platforms_html(g, html)
-            html = Builder.__get_mobile_links(g, html)
+            html = html.replace('@game', g.get_inpage_platforms_html(Builder.TEMPLATE_DIRECTORY))
+            html = html.replace('@downloads', g.get_downloadable_platforms_html(Builder.TEMPLATE_DIRECTORY, Builder.GAMES_DIR))
+            html = html.replace('@mobile', g.get_mobile_links(Builder.GOOGLE_PLAY_PATH))
             html = html.replace('@screenshots', g.get_screenshots())
             html = html.replace('@educators_guide', g.get_educators_guide_html())
             final_html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, html).replace('@title', g.get('name'))
@@ -117,89 +117,6 @@ class Builder:
 
             file_io.write("{0}/{1}".format(Builder.OUTPUT_DIR, filename), final_html)
  
-    def __get_educators_guide(g, html):
-        link = g.get_educators_guide_html()        
-        html = html.replace('@educators_guide', link)
-        return html
-
-    # Modifies "html": replaces @mobile with mobile links
-    def __get_mobile_links(g, html):
-        links_html = ''
-        mobile_data = g.platform_data(['android']) #TODO: iOS
-        if mobile_data: # not empty
-            for platform, data in mobile_data.items():
-                link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
-                links_html += "<a href='{0}'><img src='images/google-play-badge.png' /></a>".format(link_target)
-            
-            html = html.replace('@mobile', links_html)
-        else:
-            html = html.replace('@mobile', '')
-        
-        return html
-
-    # Modifies "html": replaces @downloads with download links
-    def __get_downloadable_platforms_html(g, html):
-        downloadable_data = g.platform_data(['windows', 'linux', 'mac'])
-        template = file_io.read("{0}/snippets/download_game.html".format(Builder.TEMPLATE_DIRECTORY))
-        downloads_html = ''
-
-        if downloadable_data: # not empty
-            for platform, data in downloadable_data.items():
-                url = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
-                name = "{0} version".format(platform.capitalize())
-                downloads_html = "{0}{1}".format(downloads_html, template.replace('@url', url).replace('@name', name))
-
-        # If we have something to download, show the download section.
-        if downloads_html: # not empty
-            downloads_section = file_io.read("{0}/snippets/downloads.html".format(Builder.TEMPLATE_DIRECTORY))
-            downloads_section = downloads_section.replace('@html', downloads_html)
-            html = html.replace('@downloads', downloads_section)
-        else:
-            html = html.replace('@downloads', '')
-
-        return html
-
-    # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
-    def __get_inpage_platforms_html(g, html):
-        in_page_data = g.platform_data(['flash', 'html5', 'silverlight'])
-
-        if in_page_data: # not empty
-            platform = None
-            # html5 first, then flash -- not both
-            if "html5" in in_page_data:
-                    platform = "html5" 
-                    data = in_page_data["html5"]
-            if "flash" in in_page_data:
-                    platform = "flash"
-                    data = in_page_data["flash"]
-            if "silverlight" in in_page_data:
-                platform = "silverlight" 
-                data = in_page_data["silverlight"]
-            if platform == None:
-                raise(Exception("Not sure how to process platform: {0}".format(in_page_data)))
-            
-            # Common to flash/html5/silverlight
-            template = file_io.read("{0}/snippets/{1}.html".format(Builder.TEMPLATE_DIRECTORY, platform))
-            template = template.replace('@width', str(data['width']))
-            template = template.replace('@height', str(data['height']))
-            
-
-            if platform == "flash":
-                template = template.replace('@swf', "games/flash/{0}".format(data['swf']))
-            elif platform == "html5":
-                template = template.replace('@folder', data['folder'])
-            elif platform == "silverlight":
-                template = template.replace('@xap', "games/silverlight/{0}".format(data['xap']))
-            else:
-                raise(Exception("Not sure how to get in-page data for {0}".format(platform)))
-            
-            html = html.replace('@game', template)
-        else:
-            # get rid of @game if it's still around
-            html = html.replace('@game', '')
-        
-        return html
-
     def __generate_front_page_game_entries(self):
         featured_html = ''
         regular_html = ''
@@ -214,7 +131,7 @@ class Builder:
             game_image = "{0}/{1}".format(Builder.IMAGES_DIR, filename)
             if not os.path.isfile(game_image):
                 raise(Exception("Can't find image {2}/{0} for game {1}".format(g.get('screenshot'), g.get('name'), Builder.IMAGES_DIR)))
-            html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(g.get_url(), game_image.replace('data/', ''))
+            html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(g.get_url(), game_image.replace('{0}/'.format(Builder.DATA_DIR), ''))
 
             platform_html = ""
             for platform_data in g.get('platforms'):
@@ -338,7 +255,81 @@ class Game:
 
     ### REGION: URL and HTML responsibilities ###
 
-    # Get content for @screenshots
+    
+    # HTML for @game for in-place games (Flash, HTML5/JS, Silverlight).
+    # Generates <object> for Flash/Silverlight, <iframe> for HTML5
+    def get_inpage_platforms_html(self, template_directory):
+        in_page_data = self.platform_data(['flash', 'html5', 'silverlight'])
+
+        if in_page_data: # not empty
+            platform = None
+            # html5 first, then flash -- not both
+            if "html5" in in_page_data:
+                platform = "html5" 
+                data = in_page_data["html5"]
+            if "flash" in in_page_data:
+                platform = "flash"
+                data = in_page_data["flash"]
+            if "silverlight" in in_page_data:
+                platform = "silverlight" 
+                data = in_page_data["silverlight"]
+            if platform == None:
+                raise(Exception("Not sure how to process platform: {0}".format(in_page_data)))
+            
+            # Common to flash/html5/silverlight
+            template = file_io.read("{0}/snippets/{1}.html".format(template_directory, platform))
+            template = template.replace('@width', str(data['width']))
+            template = template.replace('@height', str(data['height']))
+
+            if platform == "flash":
+                template = template.replace('@swf', "games/flash/{0}".format(data['swf']))
+            elif platform == "html5":
+                template = template.replace('@folder', data['folder'])
+            elif platform == "silverlight":
+                template = template.replace('@xap', "games/silverlight/{0}".format(data['xap']))
+            else:
+                raise(Exception("Not sure how to get in-page data for {0}".format(platform)))
+            
+            return template
+        else:
+            return "";        
+
+
+    # Download links for @downloads, if applicable (desktop only)
+    def get_downloadable_platforms_html(self, template_directory, games_directory):
+        downloadable_data = self.platform_data(['windows', 'linux', 'mac'])
+        template = file_io.read("{0}/snippets/download_game.html".format(template_directory))
+        downloads_html = ''
+
+        if downloadable_data: # not empty
+            for platform, data in downloadable_data.items():
+                url = "{0}/{1}/{2}".format(games_directory, platform, data)
+                name = "{0} version".format(platform.capitalize())
+                downloads_html = "{0}{1}".format(downloads_html, template.replace('@url', url).replace('@name', name))
+
+        # If we have something to download, show the download section. (Separate template.)
+        if downloads_html: # not empty
+            downloads_section = file_io.read("{0}/snippets/downloads.html".format(template_directory))
+            downloads_section = downloads_section.replace('@html', downloads_html)
+            return downloads_section
+        else:
+            return ""
+
+
+    # Mobile links for @mobile, if applicable (mobile apps only)
+    def get_mobile_links(self, google_play_prefix):
+        links_html = ''
+        mobile_data = self.platform_data(['android']) #TODO: iOS
+        if mobile_data: # not empty
+            for platform, data in mobile_data.items():
+                link_target = "{0}{1}".format(google_play_prefix, data)
+                links_html += "<a href='{0}'><img src='images/google-play-badge.png' /></a>".format(link_target)
+            
+            return links_html
+        else:
+            return ""
+
+    # Screenshot HTML for @screenshots
     def get_screenshots(self):
         if self.has('screenshots'):
             template = file_io.read(Builder.SCREENSHOTS_SNIPPET)
