@@ -55,12 +55,18 @@ class Builder:
 
     def __load_data(self):
         raw_json = file_io.read(Builder.DATABASE_FILE)
-
-        # sort by publication date, reverse chronologically
-        self.games = json.loads(raw_json)['games']
-        self.games.sort(key = lambda x: x["published"], reverse = True)
-        if self.games == None:
+        json_games = json.loads(raw_json)['games']
+        
+        if json_games == None:
             raise(Exception('JSON structure changed; where is the top-level "games" list?'))
+
+        # sort by publication date, reverse chronologically (newest first)
+        json_games.sort(key = lambda x: x["published"], reverse = True)
+
+        # Convert into Game instances
+        self.games = []
+        for j in json_games:
+            self.games.append(Game(j)) 
 
     def __verify_files_exist(self):
         if not os.path.isfile(Builder.DATABASE_FILE):
@@ -94,55 +100,32 @@ class Builder:
             html = file_io.read(Builder.GAME_PAGE_TEMPLATE)
 
             version = '1.0.0'            
-            if 'version' in g:
-                    version = g['version']
+            if g.has('version'):
+                version = g.get('version')
 
-            html = html.replace('@name', g['name']).replace('@blurb', g['blurb']).replace('@version', version)
+            html = html.replace('@name', g.get('name')).replace('@blurb', g.get('blurb')).replace('@version', version)
 
             # Start adding per-platform HTML
             # For HTML5 and Flash, add in-page game playing
             html = Builder.__get_inpage_platforms_html(g, html)
             html = Builder.__get_downloadable_platforms_html(g, html)
             html = Builder.__get_mobile_links(g, html)
-            html = Builder.__get_screenshots(g, html)
-            html = Builder.__get_educators_guide(g, html)
-            final_html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, html).replace('@title', g['name'])
-            filename = Builder.__url_for_game(g)
+            html = html.replace('@screenshots', g.get_screenshots())
+            html = html.replace('@educators_guide', g.get_educators_guide_html())
+            final_html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, html).replace('@title', g.get('name'))
+            filename = g.get_url()
 
             file_io.write("{0}/{1}".format(Builder.OUTPUT_DIR, filename), final_html)
  
     def __get_educators_guide(g, html):
-        link = ''
-        if 'educators_guide' in g:
-            link = "<br /><a href='guides/{0}'><img src='images/educators_guide.svg' width='32' height='32' /> Parents/Educators Guide</a>".format(g['educators_guide'])
+        link = g.get_educators_guide_html()        
         html = html.replace('@educators_guide', link)
-        return html
-
-    # Replace @screenshots with screenshots
-    def __get_screenshots(g, html):
-        if 'screenshots' in g:
-            template = file_io.read(Builder.SCREENSHOTS_SNIPPET)
-            name = Builder.__url_for_game(g).replace('.html', '')
-            ss_html = ''
-            for s in g['screenshots']:
-                url = "images/{0}/{1}".format(name, s)
-                native_size = Image.open("data/{0}".format(url)).size # (w, h)
-                # Scale to 250px. Unless the image is already smaller. Then don't scale.
-                scale = min(1.0 * Builder.MAX_SCREENSHOT_SIZE / native_size[0], 1.0 * Builder.MAX_SCREENSHOT_SIZE / native_size[1], 1)
-                scale_w = int(scale * native_size[0])
-                scale_h = int(scale * native_size[1])
-                ss_html = "{0}<img src='{1}' width='{2}' height='{3}' data-jslghtbx='{1}' class='screenshot' />".format(ss_html, url, scale_w, scale_h)
-            template = template.replace('@screenshots', ss_html)
-            html = html.replace('@screenshots', template)
-        else:
-            html = html.replace('@screenshots', '')
-
         return html
 
     # Modifies "html": replaces @mobile with mobile links
     def __get_mobile_links(g, html):
         links_html = ''
-        mobile_data = Builder.__platform_data(g, ['android']) #TODO: iOS
+        mobile_data = g.platform_data(['android']) #TODO: iOS
         if mobile_data: # not empty
             for platform, data in mobile_data.items():
                 link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
@@ -156,7 +139,7 @@ class Builder:
 
     # Modifies "html": replaces @downloads with download links
     def __get_downloadable_platforms_html(g, html):
-        downloadable_data = Builder.__platform_data(g, ['windows', 'linux', 'mac'])
+        downloadable_data = g.platform_data(['windows', 'linux', 'mac'])
         template = file_io.read("{0}/snippets/download_game.html".format(Builder.TEMPLATE_DIRECTORY))
         downloads_html = ''
 
@@ -178,7 +161,7 @@ class Builder:
 
     # Modifies "html": replaces @game with in-place game code (<object> for swf, <iframe> for HTML5)
     def __get_inpage_platforms_html(g, html):
-        in_page_data = Builder.__platform_data(g, ['flash', 'html5', 'silverlight'])
+        in_page_data = g.platform_data(['flash', 'html5', 'silverlight'])
 
         if in_page_data: # not empty
             platform = None
@@ -226,15 +209,15 @@ class Builder:
             is_featured = g == self.games[0] or g == self.games[1]
             column_size = 6 if is_featured else 4 # featured = half-screen, otherwise one-third
             # Regardless of extension, add size
-            filename = g['screenshot']
+            filename = g.get('screenshot')
 
             game_image = "{0}/{1}".format(Builder.IMAGES_DIR, filename)
             if not os.path.isfile(game_image):
-                raise(Exception("Can't find image {2}/{0} for game {1}".format(g['screenshot'], g['name'], Builder.IMAGES_DIR)))
-            html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(Builder.__url_for_game(g), game_image.replace('data/', ''))
+                raise(Exception("Can't find image {2}/{0} for game {1}".format(g.get('screenshot'), g.get('name'), Builder.IMAGES_DIR)))
+            html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(g.get_url(), game_image.replace('data/', ''))
 
             platform_html = ""
-            for platform_data in g['platforms']:
+            for platform_data in g.get('platforms'):
                 for platform, data in platform_data.items():
                     # windows/linux: value = executable
                     # android: value = google play ID
@@ -245,7 +228,7 @@ class Builder:
                     elif 'android' in platform:
                         link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
                     elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
-                        link_target = Builder.__url_for_game(g)
+                        link_target = g.get_url()
                     else:
                         raise(Exception("Not sure what the link target is for {0}".format(platform)))
                     
@@ -306,8 +289,6 @@ class Builder:
 
         self.master_page_html = index_page.replace(Builder.NAVBAR_LINKS_PLACEHOLDER, links_html)
 
-### start: make a Game class and put these inside
-
      # page file: eg. data/pages/privacy_policy.md
      # returns: 'privacy_policy'
     def __get_page_name(markdown_filename):
@@ -315,31 +296,6 @@ class Builder:
         name_stop = markdown_filename.rindex('.md')
         page_name = markdown_filename[name_start:name_stop]
         return page_name
-
-    # g => { :name => 'Quest for the Royal Jelly'}
-    # return: quest-for-the-royal-jelly.html
-    def __url_for_game(g):
-        name = g['name']
-        name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
-        return "{0}.html".format(name)
-
-    # Get all datapoints for specific platforms. If you pass in (g, ['windows', 'linux']),
-    # you'll get data for both windows and linux (if they're both there).
-    # HTML5, Flash, and Silverlight need to be shown in-page.
-    # Windows, Linux, and Mac need a download link.
-    # Returns an array, eg. {:windows => ..., :linux => ...}
-    def __platform_data(g, target_platforms):
-        to_return = {}
-
-        for platform_data in g['platforms']:
-            for platform, data in platform_data.items():
-                # if you specify both, returns the first one found
-                if platform in target_platforms:
-                        to_return[platform] = data
-
-        return to_return
-
-### end: make a Game class and put these inside
 
     # privacy_policy => Privacy Policy
     # who_is_that_person => Who is that Person
@@ -353,3 +309,63 @@ class Builder:
                 word = word.capitalize()
             title = "{0}{1} ".format(title, word)
         return title.strip()
+
+class Game:
+    def __init__(self, json):
+        self.json = json
+
+    def has(self, key):
+        return key in self.json
+
+    def get(self, key):
+        return self.json[key]
+    
+    # Get all datapoints for specific platforms. If you pass in (['windows', 'linux']),
+    # you'll get data for both windows and linux (if the game has data for both).
+    # HTML5, Flash, and Silverlight need to be shown in-page.
+    # Windows, Linux, and Mac need a download link.
+    # Returns an array, eg. {:windows => ..., :linux => ...}
+    def platform_data(self, target_platforms):
+        to_return = {}
+
+        for platform_data in self.get('platforms'):
+            for platform, data in platform_data.items():
+                # if you specify multiple, returns the first one found
+                if platform in target_platforms:
+                    to_return[platform] = data
+
+        return to_return   
+
+    ### REGION: URL and HTML responsibilities ###
+
+    # Get content for @screenshots
+    def get_screenshots(self):
+        if self.has('screenshots'):
+            template = file_io.read(Builder.SCREENSHOTS_SNIPPET)
+            name = self.get_url().replace('.html', '')
+            ss_html = ''
+            for s in self.get('screenshots'):
+                url = "images/{0}/{1}".format(name, s)
+                native_size = Image.open("data/{0}".format(url)).size # (w, h)
+                # Scale to 250px. Unless the image is already smaller. Then don't scale.
+                scale = min(1.0 * Builder.MAX_SCREENSHOT_SIZE / native_size[0], 1.0 * Builder.MAX_SCREENSHOT_SIZE / native_size[1], 1)
+                scale_w = int(scale * native_size[0])
+                scale_h = int(scale * native_size[1])
+                ss_html = "{0}<img src='{1}' width='{2}' height='{3}' data-jslghtbx='{1}' class='screenshot' />".format(ss_html, url, scale_w, scale_h)
+            
+            return ss_html
+        else:
+            return ""        
+
+    # return: Quest for the Royal Jelly => quest-for-the-royal-jelly.html
+    def get_url(self):
+        name = self.get('name')
+        name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
+        return "{0}.html".format(name)
+
+    def get_educators_guide_html(self):
+        if self.has('educators_guide'):
+            return "<br /><a href='guides/{0}'><img src='images/educators_guide.svg' width='32' height='32' /> Parents/Educators Guide</a>".format(self.get('educators_guide'))
+        else:
+            return ""
+    
