@@ -121,6 +121,7 @@ class Builder:
         featured_html = ''
         regular_html = ''
         platform_html = ''
+        in_this_row = 0
 
         for g in self.games:
             is_featured = g == self.games[0] or g == self.games[1]
@@ -153,12 +154,27 @@ class Builder:
                     platform_html = "{0}<a href='{1}'><img src='images/{2}.{3}' width='32' height='32' /></a>".format(platform_html, link_target, platform, ext)
 
             # Compose final HTML
-            final_html = "<div class='col-sm-{0}'>{1}<br />{2}</div>".format(column_size, html, platform_html)
+            final_html = "<div class='col-sm-{0}'>{1}{2}</div>".format(column_size, html, platform_html)
+
+            if not is_featured:
+                if in_this_row == 0:
+                    final_html = "{0}{1}".format("<div class='row'>", final_html)
+                elif in_this_row == 2:
+                    final_html = "{0}{1}".format(final_html, "</div>")
+
+                in_this_row += 1
+                in_this_row %= 3
 
             if is_featured:
                 featured_html = "{0}{1}".format(featured_html, final_html)
             else:
                 regular_html = "{0}{1}".format(regular_html, final_html)
+
+            
+
+        # close unopened div if number of games is not divisible by 3
+        if (in_this_row > 0):
+            regular_html += "</div>"
 
         featured_html = file_io.read(Builder.JUMBOTRON_SNIPPET).replace('@content', featured_html)
         html = file_io.read("{0}/{1}".format(Builder.OUTPUT_DIR, Builder.INDEX_PAGE))
