@@ -20,3 +20,11 @@ iframe {
 .screenshot {
     padding: 4px;
 }
+
+.row {
+  padding-bottom: 8px;
+}
+
+.row img {
+  padding-bottom: 8px;
+}
