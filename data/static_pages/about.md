@@ -3,6 +3,7 @@
 Deen Games started with a simple idea: call people to Islam through games. Pique their curiosity to learn more. Deen Games became so much more than that:
 
 - We create fun, engaging alternatives to non-Islamic games.
+- We develop educational and Islamic kids games.
 - We teach Muslims about their deen.
 - We educate through games about math, science, and other worldly topics
 - We showcase our voice, our values, and our culture to the media.
