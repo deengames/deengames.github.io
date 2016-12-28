@@ -12,6 +12,6 @@ We need your support. If you have the time, consider helping out for a project â
 
 If you want to help out or just reach out, [drop me an email](mailto:ashes999@yahoo.com). I'd love to hear from you.
 
-Alternatively, not everyone has the time, motivation, or talents to help with games. Consider supporting us financially so we can reach our goals. Click below to read more about it on Patreon. 
+Alternatively, not everyone has the time, motivation, or talents to help with games. With financial support, we can hire help and make more, better games, faster. Click below to read more about it on Patreon. 
 
 <a href="https://www.patreon.com/DeenGames"><img src="images/become-a-patron.png" /></a>

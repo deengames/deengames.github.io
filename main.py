@@ -1,2 +1,2 @@
-from src.builder import Builder
-Builder().build()
+import src.builder
+src.builder.Builder().build()
