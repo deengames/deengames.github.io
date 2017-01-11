@@ -112,6 +112,7 @@ class Builder:
             html = html.replace('@mobile', g.get_mobile_links(Builder.GOOGLE_PLAY_PATH))
             html = html.replace('@screenshots', g.get_screenshots())
             html = html.replace('@educators_guide', g.get_educators_guide_html())
+            html = html.replace("@patreon", "<h2>Like Our Games? Support Us on Patreon!</h2><a href='http://patreon.com/DeenGames'><img src='images/become-a-patron.png' /></a>")
             final_html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, html).replace('@title', g.get('name'))
             filename = g.get_url()
 
@@ -360,7 +361,7 @@ class Game:
                 scale_h = int(scale * native_size[1])
                 ss_html = "{0}<img src='{1}' width='{2}' height='{3}' data-jslghtbx='{1}' class='screenshot' />".format(ss_html, url, scale_w, scale_h)
             
-            return ss_html
+            return template.replace('@screenshots', ss_html)
         else:
             return ""        
 
