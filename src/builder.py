@@ -70,9 +70,9 @@ class Builder:
 
     def __verify_files_exist(self):
         if not os.path.isfile(Builder.DATABASE_FILE):
-            raise(Exception("{0} not found").format(DATABASE_FILE))
+            raise(Exception("{0} not found".format(Builder.DATABASE_FILE)))
         if not os.path.isdir(Builder.TEMPLATE_DIRECTORY):
-            raise(Exception("{0} directory not found".format(TEMPLATE_DIRECTORY)))
+            raise(Exception("{0} directory not found".format(Builder.TEMPLATE_DIRECTORY)))
 
     def __generate_site(self):
         # Delete the old output (clean build)
@@ -191,8 +191,8 @@ class Builder:
         for p in self.pages:
             raw_markdown = file_io.read(p)
             to_html = markdown.markdown(raw_markdown)
-            html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, to_html).replace('@title', Builder.__to_title(Builder.__get_page_name(p)))
-            page_name = Builder.__get_page_name(p)
+            html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, to_html).replace('@title', self.__to_title(self.__get_page_name(p)))
+            page_name = self.__get_page_name(p)
 
             file_io.write("{0}/{1}.html".format(Builder.OUTPUT_DIR, page_name), html)
 
@@ -215,8 +215,8 @@ class Builder:
         for page in self.pages:
             # Create the header link for this page
             # Creates relative links. This is okay, since our site is flat (no subdirectories)
-            page_name = Builder.__get_page_name(page)
-            html = navbar_template.replace('@url', "{0}.html".format(page_name)).replace('@title', Builder.__to_title(page_name))
+            page_name = self.__get_page_name(page)
+            html = navbar_template.replace('@url', "{0}.html".format(page_name)).replace('@title', self.__to_title(page_name))
             links_html = "{0}{1}".format(links_html, html)
         
 
@@ -224,7 +224,7 @@ class Builder:
 
      # page file: eg. data/pages/privacy_policy.md
      # returns: 'privacy_policy'
-    def __get_page_name(markdown_filename):
+    def __get_page_name(self, markdown_filename):
         name_start = markdown_filename.rindex('/') + 1
         name_stop = markdown_filename.rindex('.md')
         page_name = markdown_filename[name_start:name_stop]
@@ -232,7 +232,7 @@ class Builder:
 
     # privacy_policy => Privacy Policy
     # who_is_that_person => Who is that Person
-    def __to_title(sentence):
+    def __to_title(self, sentence):
         stop_words = ['a', 'an', 'and', 'the', 'or', 'for', 'of', 'nor'] #there is no such thing as a definite list of stop words, so you may edit it according to your needs.
         words = sentence.replace('_', ' ').split()
 
