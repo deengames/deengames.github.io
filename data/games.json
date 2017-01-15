@@ -1,8 +1,17 @@
 {
   "games": [
     {
+      "name": "Dajjal's Minions",
+      "version": "1.0.1",
+      "screenshot": "dajjals-minions.png",
+      "blurb": "Marooned in deep space, with the jump-drive offline, the Captain can only hope to gather enough rescue pods to repair the ship. Can he escape before the Dajjal's minions, already in hot pursuit, close in for the kill? Procedural content makes a new, different challenge each time you play!",
+      "published": "2017-01-12",
+      "screenshots": [ "screenshot-pickups.png", "screenshot-railgun.png", "screenshot-shield.png", "screenshot-shotgun.png", "screenshot-upgrade.png" ],
+      "platforms": [ { "windows": "dajjals-minions-1.0.1-windows.zip" }, { "linux": "dajjals-minions-1.0.1-linux.zip" } ]
+    },
+    {
       "name": "A Day and a Night",
-      "version": "1.0.0",            
+      "version": "1.0.0",
       "screenshot": "a-day-and-a-night.png",
       "blurb": "Hamza Blade, a warrior with a mysterious past, awakens in a small village. Is he safe from the deeds of his past? Will he find what he sought in this small village? Find out in this short adventure-RPG!",
       "published": "2016-11-30",
@@ -29,7 +38,7 @@
     },
     {
       "name": "Quest for the Royal Jelly",
-      "version": "1.0.0",            
+      "version": "1.0.0",
       "screenshot": "quest-for-the-royal-jelly.png",
       "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
       "published": "2012-08-01",
