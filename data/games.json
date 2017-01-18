@@ -40,9 +40,10 @@
       "name": "Quest for the Royal Jelly",
       "version": "1.0.0",
       "screenshot": "quest-for-the-royal-jelly.png",
-      "blurb": "An RPG-like adventure game of mystery and tawheed! A king charges Ibrahim with a quest to find and slay the adventurer-eating, divine-claiming Royal Jelly!",
+      "blurb": "The king appoints Ibrahim a quest: find and slay the adventurer-eating, divine-claiming Royal Jelly. Join Ibrahim in his journey to find the Royal Jelly and rediscover the essence of tawheed!",
       "published": "2012-08-01",
-      "platforms": [ { "windows": "quest-for-the-royal-jelly-1.0.zip" } ]
+      "platforms": [ { "windows": "quest-for-the-royal-jelly-1.0.zip" } ],
+      "screenshots": [ "screenshot-1.png", "screenshot-2.png", "screenshot-3.png", "screenshot-4.png"]
     },
     {
       "name": "Find the Harf",
