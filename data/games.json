@@ -7,7 +7,7 @@
       "blurb": "Marooned in deep space, with the jump-drive offline, the Captain can only hope to gather enough rescue pods to repair the ship. Can he escape before the Dajjal's minions, already in hot pursuit, close in for the kill? Procedural content makes a new, different challenge each time you play!",
       "published": "2017-01-12",
       "screenshots": [ "screenshot-pickups.png", "screenshot-railgun.png", "screenshot-shield.png", "screenshot-shotgun.png", "screenshot-upgrade.png" ],
-      "platforms": [ { "windows": "dajjals-minions-1.0.1-windows.zip" }, { "linux": "dajjals-minions-1.0.1-linux.zip" } ]
+      "platforms": [ { "windows": "dajjals-minions-1.0.2-windows.zip" }, { "linux": "dajjals-minions-1.0.2-linux.zip" } ]
     },
     {
       "name": "A Day and a Night",
