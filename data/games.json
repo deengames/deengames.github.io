@@ -1,6 +1,15 @@
 {
   "games": [
     {
+      "name": "Control Your Tongue",
+      "version": "1.0.0",
+      "screenshot": "control-your-tongue.png",
+      "blurb": "Learn and practice tajweed (pronunciation) of words in the Qur'an interactively. Learn common words in the Qur'an and choose what areas to improve yourself!",
+      "published": "2017-03-23",
+      "platforms": [ { "android": "com.deengames.controlyourtongue" } ],
+      "screenshots": [ "menu.png", "word.png", "tutorial.png"]
+    },
+    {
       "name": "Dajjal's Minions",
       "version": "1.0.1",
       "screenshot": "dajjals-minions.png",
