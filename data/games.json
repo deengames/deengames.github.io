@@ -29,12 +29,12 @@
     },
     {
       "name": "A Day and a Night",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "screenshot": "a-day-and-a-night.png",
       "blurb": "Hamza Blade, a warrior with a mysterious past, awakens in a small village. Is he safe from the deeds of his past? Will he find what he sought in this small village? Find out in this short adventure-RPG!",
       "published": "2016-11-30",
       "screenshots": [ "screenshot-meadow.png", "screenshot-flashback.png", "screenshot-power.png", "screenshot-cave.png" ],
-      "platforms": [ { "windows": "a-day-and-a-night-v1.0.0.zip" } ],
+      "platforms": [ { "windows": "a-day-and-a-night-v1.0.1.zip" } ],
       "educators_guide": "a-day-and-a-night.pdf"
     },
     {
