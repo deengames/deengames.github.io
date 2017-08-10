@@ -125,15 +125,19 @@ class Builder:
         in_this_row = 0
 
         for g in self.games:
-            is_featured = g == self.games[0] or g == self.games[1]
-            column_size = 6 if is_featured else 4 # featured = half-screen, otherwise one-third
+            is_featured = g == self.games[0]
+             
+            # featured = full-screen, otherwise one-third
+            # also, featured image requires center-block class to center. Otherwise, whitespace on the RHS.
+            column_size = 12 if is_featured else 4
+            image_class = 'img-responsive center-block' if is_featured else 'img-responsive'
             # Regardless of extension, add size
             filename = g.get('screenshot')
 
             game_image = os.path.join(Builder.IMAGES_DIR, filename)
             if not os.path.isfile(game_image):
                 raise(Exception("Can't find image {2}/{0} for game {1}".format(g.get('screenshot'), g.get('name'), Builder.IMAGES_DIR)))
-            html = "<a href='{0}'><img class='img-responsive' src='{1}' /></a>".format(g.get_url(), game_image.replace('{0}{1}'.format(Builder.DATA_DIR, os.sep), ''))
+            html = "<a href='{0}'><img class='{1}' src='{2}' /></a>".format(g.get_url(), image_class, game_image.replace('{0}{1}'.format(Builder.DATA_DIR, os.sep), ''))
 
             platform_html = ""
             for platform_data in g.get('platforms'):
@@ -167,9 +171,9 @@ class Builder:
                 in_this_row %= 3
 
             if is_featured:
-                featured_html = "{0}{1}".format(featured_html, final_html)
+                featured_html = "{0}\r\n{1}".format(featured_html, final_html)
             else:
-                regular_html = "{0}{1}".format(regular_html, final_html)
+                regular_html = "{0}\r\n{1}".format(regular_html, final_html)
 
             
 
