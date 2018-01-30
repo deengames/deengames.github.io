@@ -1,0 +1,127 @@
+{
+    "splashDisplayTimeSeconds": 3,
+    "splashFadeTimeSeconds": 1,
+    "totalLevels": 6,
+    "entitiesLevelMultiplier": 15,
+    "entitiesWaveMultiplier": 3,
+    "secondsPerAsteroidToSpawnOver": 0.8,
+    "secondsPerEnemyToSpawnOver": 2,
+    "saveSlotName": "BackeroidsMainSave",
+
+    "asteroids": {
+        "enabled": true,
+        "initialNumber": 3,
+        "secondsToSpawn": 3,
+        "collisionElasticity": 0.5,
+        "initialVelocity": 90,
+        "backeroidPercentage": 0,
+        "maxChunks": 3,
+        "minChunks": 2,
+        "maxVelocity": 250,
+
+        "backeroid": {
+            "initialHealth": 8,
+            "scale": 1,
+            "mass": 12
+        },
+
+        "big": {
+            "initialHealth": 1,
+            "scale": 1,
+            "mass": 9
+        },
+
+        "medium": {
+            "initialHealth": 1,
+            "scale": 0.5,
+            "mass": 3,
+            "velocityMultiplier": 0.5
+        },
+
+        "small": {
+            "initialHealth": 1,
+            "scale": 0.25,
+            "mass": 1,
+            "velocityMultiplier": 1
+        }
+    },
+
+    "ship": {
+        "secondsToRevive": 3,
+        "rotationVelocity": 270, // pixels per second
+        "acceleration": 150,
+        "maxVelocity": 200,
+        "decelerationMultiplier": 2, // decelerate n-times faster
+        "deadstopVelocity": 15, // velocity to spontanously stop at, multiplied by above multiplier.
+        "invincibleAfterSpawnSeconds": 3,
+        "lives": 5,
+        "shield": {
+            "enabled": true,
+            "health": 10,
+            "secondsPerRecharge": 0.8,
+            "invincibleSeconds": 0.4
+        }
+    },
+
+    "gun": {
+        "fireCooldownSeconds": 0.5,
+        "bulletVelocity": 400,
+        "bulletExpireSeconds": 3
+    },
+
+    "features": {
+        "wrapBullets": true,
+        "splitAsteroidsOnDeath": true,
+        "collideAsteroidsWithAsteroids": true,
+        "infiniteLives": false,
+        "unlockAllLevels": false
+    },
+
+    "enemies": {
+        "enabled": true,
+        "elasticity": 0,
+        "secondsToSpawn": 3,
+        "shooter": {
+            "enabled": true,
+            "name": "shooter",
+            "health": 3,
+            "appearsOnLevel": 2,
+            "fireRatePerSecond": 0.5, // per second
+            "bulletVelocity": 250,
+            "velocity": 
+            {
+                "x": 100,
+                "y": 50
+            },
+            "sustainVyForSeconds": 1
+        },
+        "tank": {
+            "enabled": false,
+            "name": "tank",
+            "health": 7,
+            "appearsOnLevel": 4,
+            "velocity": 25
+        },
+        "kamikaze": {
+            "enabled": true,
+            "name": "kamikaze",
+            "health": 1,
+            "appearsOnLevel": 3,
+            "velocity": 250
+        },
+        "minedropper": {
+            "enabled": true,
+            "name": "mines",
+            "health": 5,
+            "appearsOnLevel": 5,
+            "fireRatePerSecond": 0.3,
+            "velocity": {
+                "x": 70,
+                "y": 30
+            },
+            "mineFuseSeconds": 8,
+            "explosionWidth": 99,
+            "explosionHeight": 99
+        }
+    }
+}
