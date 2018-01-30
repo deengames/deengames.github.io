@@ -1,6 +1,15 @@
 {
   "games": [
     {
+      "name": "Backeroids",
+      "version": "1.0.0",      
+      "screenshot": "backeroids.png",
+      "blurb": "Asteroids with a twist, for Github Game Off 2017. Contains six levels, three enemy types,  a rechargeable energy shield, and keyboard/mouse support. Runs in Chrome.",
+      "published": "2017-12-01",
+      "platforms": [ { "html5": { "width": 800, "height": 450, "folder": "backeroids" } } ],
+      "screenshots": [ "screenshot-1.png", "screenshot-2.png",  "screenshot-3.png"]
+    },
+    {
       "name": "Find the Harf",
       "version": "2.0.0",      
       "screenshot": "find-the-harf.png",
