@@ -10,7 +10,7 @@ Deen Games started with a simple idea: call people to Islam through games. Pique
 
 We need your support. If you have the time, consider helping out for a project -- everything from feedback to play-testing, artwork, programming, there's no end to what we need!
 
-If you want to help out or just reach out, [drop me an email](mailto:ashes999@yahoo.com). I'd love to hear from you.
+If you want to help out or just reach out, you can [drop us an email](mailto:nightbladecodes@gmail.com). We'd love to hear from you.
 
 Alternatively, not everyone has the time, motivation, or talents to help with games. With financial support, we can hire help and make more, better games, faster. Click below to read more about it on Patreon. 
 
