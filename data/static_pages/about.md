@@ -12,6 +12,4 @@ We need your support. If you have the time, consider helping out for a project -
 
 If you want to help out or just reach out, you can [drop us an email](mailto:nightbladecodes@gmail.com). We'd love to hear from you.
 
-Alternatively, not everyone has the time, motivation, or talents to help with games. With financial support, we can hire help and make more, better games, faster. Click below to read more about it on Patreon. 
-
-<a href="https://www.patreon.com/DeenGames"><img src="images/become-a-patron.png" /></a>
+Alternatively, not everyone has the time, motivation, or talents to help with games. With financial support, we can hire help and make more, better games, faster. <a href="https://www.patreon.com/DeenGames">Click here to read more about it on Patreon</a>.
