@@ -40,6 +40,8 @@ class Builder:
 
     GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
 
+    ITCH_IO_URL_ROOT = 'https://deengames.itch.io'
+
     # When scaling images, scale down to this width/height (whatever's smaller)
     # The image width (if a landscape image) is guaranteed to be 250px or less
     # The image height (if a portrait image) is guaranteed to be 250px or less
@@ -87,37 +89,10 @@ class Builder:
         for item in Builder.INDIVIDUAL_FILES_TO_COPY:
             shutil.copyfile(item, os.path.join(Builder.OUTPUT_DIR, item))
 
-        distutils.dir_util.copy_tree(os.path.join(Builder.DATA_DIR, Builder.GAMES_DIR), os.path.join(Builder.OUTPUT_DIR, Builder.GAMES_DIR))
-        distutils.dir_util.copy_tree(os.path.join(Builder.DATA_DIR, Builder.GUIDES_DIR), os.path.join(Builder.OUTPUT_DIR, Builder.GUIDES_DIR))
-
         self.__generate_master_page()
         self.__generate_static_pages()
         self.__generate_front_page_game_entries()
-        self.__generate_game_pages()
 
-    def __generate_game_pages(self):
-        for g in self.games:
-            html = file_io.read(Builder.GAME_PAGE_TEMPLATE)
-
-            version = '1.0.0'            
-            if g.has('version'):
-                version = g.get('version')
-
-            html = html.replace('@name', g.get('name')).replace('@blurb', g.get('blurb')).replace('@version', version)
-
-            # Start adding per-platform HTML
-            # For HTML5 and Flash, add in-page game playing
-            html = html.replace('@game', g.get_inpage_platforms_html(Builder.TEMPLATE_DIRECTORY))
-            html = html.replace('@downloads', g.get_downloadable_platforms_html(Builder.TEMPLATE_DIRECTORY, Builder.GAMES_DIR))
-            html = html.replace('@mobile', g.get_mobile_links(Builder.GOOGLE_PLAY_PATH))
-            html = html.replace('@screenshots', g.get_screenshots())
-            html = html.replace('@educators_guide', g.get_educators_guide_html())
-            html = html.replace("@patreon", "<h2>Like Our Games? Support Us on Patreon!</h2><a href='http://patreon.com/DeenGames'><img src='images/become_a_patron_button.png' /></a>")
-            final_html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, html).replace('@title', g.get('name'))
-            filename = g.get_url()
-
-            file_io.write(os.path.join(Builder.OUTPUT_DIR, filename), final_html)
- 
     def __generate_front_page_game_entries(self):
         featured_html = ''
         regular_html = ''
@@ -156,7 +131,7 @@ class Builder:
                         raise(Exception("Not sure what the link target is for {0}".format(platform)))
                     
                     ext = ('png' if platform == 'silverlight' else 'svg')
-                    platform_html = "{0}<a href='{1}'><img src='images/{2}.{3}' width='32' height='32' /></a>".format(platform_html, link_target, platform, ext)
+                    platform_html = "{0}<img src='images/{1}.{2}' width='32' height='32' />".format(platform_html, platform, ext)
 
             # Compose final HTML
             final_html = "<div class='col-sm-{0}'>{1}{2}</div>".format(column_size, html, platform_html)
@@ -369,11 +344,11 @@ class Game:
         else:
             return ""        
 
-    # return: Quest for the Royal Jelly => quest-for-the-royal-jelly.html
+    # return: Quest for the Royal Jelly => quest-for-the-royal-jelly
     def get_url(self):
         name = self.get('name')
         name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
-        return "{0}.html".format(name)
+        return "{}/{}".format(Builder.ITCH_IO_URL_ROOT, name)
 
     def get_educators_guide_html(self):
         if self.has('educators_guide'):

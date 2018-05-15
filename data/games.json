@@ -2,94 +2,46 @@
   "games": [
     {
       "name": "Backeroids",
-      "version": "1.0.0",      
       "screenshot": "backeroids.png",
-      "blurb": "Asteroids with a twist, for Github Game Off 2017. Contains six levels, three enemy types,  a rechargeable energy shield, and keyboard/mouse support. Runs in Chrome.",
       "published": "2017-12-01",
       "platforms": [ { "html5": { "width": 800, "height": 450, "folder": "backeroids" } } ],
       "screenshots": [ "screenshot-1.png", "screenshot-2.png",  "screenshot-3.png"]
     },
     {
       "name": "Find the Harf",
-      "version": "2.0.0",      
       "screenshot": "find-the-harf.png",
-      "blurb": "Learn the Arabic letters, with proper pronunciation for tajweed! Find the Harf is an Android game is for kids aged 3-6.",
       "published": "2017-04-27",
-      "platforms": [ { "android": "com.deengames.findtheharf" } ],
-      "screenshots": [ "screenshot-1.png", "screenshot-2.png"]
-    },
-    {
-      "name": "Control Your Tongue",
-      "version": "1.0.0",
-      "screenshot": "control-your-tongue.png",
-      "blurb": "Learn and practice tajweed (pronunciation) of words in the Qur'an interactively. Learn common words in the Qur'an and choose what areas to improve yourself!",
-      "published": "2017-03-23",
-      "platforms": [ { "android": "com.deengames.controlyourtongue" } ],
-      "screenshots": [ "menu.png", "word.png", "tutorial.png"]
+      "platforms": [ { "android": "com.deengames.findtheharf" } ]
     },
     {
       "name": "Dajjal's Minions",
-      "version": "1.0.2",
       "screenshot": "dajjals-minions.png",
-      "blurb": "Marooned in deep space, with the jump-drive offline, the Captain can only hope to gather enough rescue pods to repair the ship. Can he escape before the Dajjal's minions, already in hot pursuit, close in for the kill? Procedural content makes a new, different challenge each time you play!",
       "published": "2017-01-12",
-      "screenshots": [ "screenshot-pickups.png", "screenshot-railgun.png", "screenshot-shield.png", "screenshot-shotgun.png", "screenshot-upgrade.png" ],
       "platforms": [ { "windows": "dajjals-minions-1.0.2-windows.zip" }, { "linux": "dajjals-minions-1.0.2-linux.zip" } ]
     },
     {
       "name": "A Day and a Night",
-      "version": "1.0.1",
       "screenshot": "a-day-and-a-night.png",
-      "blurb": "Hamza Blade, a warrior with a mysterious past, awakens in a small village. Is he safe from the deeds of his past? Will he find what he sought in this small village? Find out in this short adventure-RPG!",
       "published": "2016-11-30",
-      "screenshots": [ "screenshot-meadow.png", "screenshot-flashback.png", "screenshot-power.png", "screenshot-cave.png" ],
-      "platforms": [ { "windows": "a-day-and-a-night-v1.0.1.zip" } ],
-      "educators_guide": "a-day-and-a-night.pdf"
+      "platforms": [ { "windows": "a-day-and-a-night-v1.0.1.zip" } ]
     },
     {
       "name": "Owlicious",
-      "version": "1.0.0",
       "screenshot": "owlicious.png",
-      "blurb": "Owlicious is a short, interactive book-like experience for grade one students (children aged 6-7) which aligns with some values from the Ontario Science and Tech curriculum. Join Owlicious the owl on his journey to find a new home and discover delicious new prey to eat!",
       "published": "2016-05-27",
-      "platforms": [ { "android": "com.deengames.owlicious" }, { "flash": { "swf": "owlicious.swf", "width": 1024, "height": 576  } } ],
-      "screenshots": [ "owlicious-1.png", "owlicious-2.png", "owlicious-3.png"],
-      "educators_guide": "owlicious.pdf"
+      "platforms": [ { "android": "com.deengames.owlicious" }, { "flash": { "swf": "owlicious.swf", "width": 1024, "height": 576  } } ]
     },
     {
       "name": "This is my Lord",
-      "version": "1.0.3",
       "screenshot": "this-is-my-lord.png",
-      "blurb": "Follow the story of Prophet Ibraheem (alayhi salaam) as he calls his people to submit to Allah alone. He did not worship the stars, the moon, or the sun, but he worshipped Allah, alone. Read and listen to the message he gave his people, as recorded directly in the pages of the Qur'an.",
       "published": "2015-01-22",
       "platforms": [ { "android": "com.deengames.thisismylord" }, { "flash": { "swf": "this-is-my-lord.swf", "width": 1024, "height": 576  } } ]
     },
     {
       "name": "Quest for the Royal Jelly",
-      "version": "1.0.0",
       "screenshot": "quest-for-the-royal-jelly.png",
-      "blurb": "The king appoints Ibrahim a quest: find and slay the adventurer-eating, divine-claiming Royal Jelly. Join Ibrahim in his journey to find the Royal Jelly and rediscover the essence of tawheed!",
       "published": "2012-08-01",
-      "platforms": [ { "windows": "quest-for-the-royal-jelly-1.0.zip" } ],
-      "screenshots": [ "screenshot-1.png", "screenshot-2.png", "screenshot-3.png", "screenshot-4.png"]
-    },
-    {
-      "name": "Valence",
-      "version": "1.0.0",      
-      "screenshot": "valence.png",
-      "blurb": "A game of molecular madness. Stabilize atoms by matching opposing valences to create net-zero molecules. Work though four game modes, twenty different levels, and three atom types, to ultimately save the world--and your own life.",
-      "published": "2010-07-21",
-      "platforms": [ { "silverlight": { "xap": "valence.xap", "width": 800, "height": 600 } } ],
-      "screenshots": [ "title.png", "campaign.png", "story.png", "puzzle.png" ]   
-    },
-    {
-      "name": "Devil's Swords",
-      "version": "1.0.0",
-      "screenshot": "devils-swords.png",
-      "blurb": "The time of enlightenment and knowledge is past. Ignorance grips the land. An ancient force from the time of Adam (on whom be peace), powerless for centuries, arises once more, and strikes. Unable to defend themselves, unable to even identify the source of their peril, the people fall prey to it. Corruption spreads. Cities fall. Civilizations crumble. The excuses rise once more.",
-      "published": "2003-04-27",
-      "platforms": [ { "windows": "devils-swords.zip" } ],
-      "screenshots": [ "screenshot-1.png", "screenshot-2.png", "screenshot-3.png", "screenshot-4.png"]
+      "platforms": [ { "windows": "quest-for-the-royal-jelly-1.0.zip" } ]
     }
   ]
 }
