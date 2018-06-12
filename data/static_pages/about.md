@@ -1,8 +1,6 @@
 # About
 
-Deen Games started with a simple idea: to represent the voice and values and culture of Muslims and Islam in games. For too long, we've been falsely portrayed as villains in media.
-
-But Deen Games became so much more than that:
+We are a couple of Muslims passionate about creating fun (and educational) digital games, and portraying Islam positively in the media, in our spare time. Our projects cover a lot of ground:
 
 - We create fun, engaging alternatives to non-Islamic games.
 - We develop educational kids games about math, science, and other (STEM and non-STEM) topics.
@@ -11,7 +9,7 @@ But Deen Games became so much more than that:
 - We invite players to think from another perspective and learn more about Islam
 - We teach Muslims about their religion.
 
-We need your support. If you have the time, consider helping out for a project -- everything from feedback to play-testing, artwork, programming, there's no end to what we need!
+We need your support. If you have the time, consider helping out for a project -- everything from feedback to play-testing, artwork, programming, or just spreading the word about games you like.
 
 If you want to help out or just reach out, you can [drop us an email](mailto:nightbladecodes@gmail.com). We'd love to hear from you.
 
