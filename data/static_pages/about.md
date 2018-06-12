@@ -9,6 +9,8 @@ We are a couple of Muslims passionate about creating fun (and educational) digit
 - We invite players to think from another perspective and learn more about Islam
 - We teach Muslims about their religion.
 
+Keeping our games free (and open-source) is part of our core values. We strive to create games that are enjoyable and fun, not ad-riddled games that are optimized to empty your wallet. You can find our projects [​here on GitHub](https://github.com/deengames).
+
 We need your support. If you have the time, consider helping out for a project -- everything from feedback to play-testing, artwork, programming, or just spreading the word about games you like.
 
 If you want to help out or just reach out, you can [drop us an email](mailto:nightbladecodes@gmail.com). We'd love to hear from you.
