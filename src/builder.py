@@ -193,12 +193,14 @@ class Builder:
         links_html = ''
 
         for page in self.pages:
-            # Create the header link for this page
-            # Creates relative links. This is okay, since our site is flat (no subdirectories)
-            page_name = self.__get_page_name(page)
-            html = navbar_template.replace('@url', "{0}.html".format(page_name)).replace('@title', self.__to_title(page_name))
-            links_html = "{0}{1}".format(links_html, html)
-        
+            if "\\draft" in page:
+                print("Skipping static page draft for {}".format(page))
+            else:
+                # Create the header link for this page
+                # Creates relative links. This is okay, since our site is flat (no subdirectories)
+                page_name = self.__get_page_name(page)
+                html = navbar_template.replace('@url', "{0}.html".format(page_name)).replace('@title', self.__to_title(page_name))
+                links_html = "{0}{1}".format(links_html, html)
 
         self.master_page_html = index_page.replace(Builder.NAVBAR_LINKS_PLACEHOLDER, links_html)
 
