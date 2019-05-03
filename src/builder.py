@@ -128,7 +128,7 @@ class Builder:
                     elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
                         link_target = g.get_url()
                     else:
-                        raise(Exception("Not sure what the link target is for {0}".format(platform)))
+                        print("WARNING: Not sure what the link target is for {0}".format(platform))
                     
                     ext = ('png' if platform == 'silverlight' else 'svg')
                     platform_html = "{0}<img src='images/{1}.{2}' width='32' height='32' />".format(platform_html, platform, ext)

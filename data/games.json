@@ -1,11 +1,16 @@
 {
   "games": [
     {
+      "name": "Note Kingdom",
+      "screenshot": "note-kingdom.png",
+      "published": "2019-05-02",
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ]
+    },
+    {
       "name": "Backeroids",
       "screenshot": "backeroids.png",
       "published": "2017-12-01",
-      "platforms": [ { "html5": { "width": 800, "height": 450, "folder": "backeroids" } } ],
-      "screenshots": [ "screenshot-1.png", "screenshot-2.png",  "screenshot-3.png"]
+      "platforms": [ { "html5": { "width": 800, "height": 450, "folder": "backeroids" } } ]
     },
     {
       "name": "Find the Harf",
