@@ -1,6 +1,12 @@
 {
   "games": [
     {
+      "name": "Eman Quest",
+      "screenshot": "eman-quest.png",
+      "published": "2019-07-28",
+      "platforms": [ {"windows": true}, {"linux": true} ]
+    },
+    {
       "name": "Note Kingdom",
       "screenshot": "note-kingdom.png",
       "published": "2019-05-02",
