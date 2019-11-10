@@ -121,7 +121,7 @@ class Builder:
                     # android: value = google play ID
                     # flash: value = { :width, :height, :swf }
                     # silverlight: value = xap file
-                    if 'windows' in platform or 'linux' in platform:
+                    if 'windows' in platform or 'linux' in platform or 'mac' in platform:
                         link_target = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
                     elif 'android' in platform:
                         link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)

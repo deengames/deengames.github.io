@@ -1,10 +1,16 @@
 {
   "games": [
     {
+      "name": "Ali the Android",
+      "screenshot": "ali-the-android.png",
+      "published": "2019-11-06",
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ]
+    },
+    {
       "name": "Eman Quest",
       "screenshot": "eman-quest.png",
       "published": "2019-07-28",
-      "platforms": [ {"windows": true}, {"linux": true} ]
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ]
     },
     {
       "name": "Note Kingdom",
