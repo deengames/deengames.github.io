@@ -11,7 +11,7 @@ import src.file_io as file_io
 
 # Extensions
 import markdown
-from PIL import Image # requires "sudo apt-get install python-imaging" on Unix
+from PIL import Image
 
 class Builder:
 
@@ -68,7 +68,10 @@ class Builder:
         # Convert into Game instances
         self.games = []
         for j in json_games:
-            self.games.append(Game(j)) 
+            if "ignore" in j and j["ignore"] != "false":
+                print("Skipping {}".format(j["name"]))
+            else:
+                self.games.append(Game(j)) 
 
     def __verify_files_exist(self):
         if not os.path.isfile(Builder.DATABASE_FILE):
