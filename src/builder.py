@@ -41,6 +41,7 @@ class Builder:
     GOOGLE_PLAY_PATH = 'https://play.google.com/store/apps/details?id=' # URL for Google Play
 
     ITCH_IO_URL_ROOT = 'https://deengames.itch.io'
+    STEAM_ROOT_URL = 'https://store.steampowered.com/app'
 
     # When scaling images, scale down to this width/height (whatever's smaller)
     # The image width (if a landscape image) is guaranteed to be 250px or less
@@ -351,9 +352,13 @@ class Game:
 
     # return: Quest for the Royal Jelly => quest-for-the-royal-jelly
     def get_url(self):
-        name = self.get('name')
-        name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
-        return "{}/{}".format(Builder.ITCH_IO_URL_ROOT, name)
+        if self.has("steamAppId"):
+            steamAppId = self.get("steamAppId")
+            return "{}/{}".format(Builder.STEAM_ROOT_URL, steamAppId)
+        else:
+            name = self.get('name')
+            name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
+            return "{}/{}".format(Builder.ITCH_IO_URL_ROOT, name)
 
     def get_educators_guide_html(self):
         if self.has('educators_guide'):

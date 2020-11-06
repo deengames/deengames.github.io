@@ -6,4 +6,4 @@ if spec is not None:
     import src.builder
     src.builder.Builder().build()
 else:
-    raise "Please install the 'pillow' library (pip install pillow)."
+    raise ModuleNotFoundError("Please install the 'pillow' library (pip3 install pillow).")

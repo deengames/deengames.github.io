@@ -4,7 +4,8 @@
       "name": "Oneons",
       "screenshot": "oneons.png",
       "published": "2020-05-12",
-      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ]
+      "platforms": [ {"windows": true}, {"linux": true} ],
+      "steamAppId": 1342600
     },
     {
       "name": "Ali the Android",
