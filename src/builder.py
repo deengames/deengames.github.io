@@ -119,23 +119,25 @@ class Builder:
             html = "<a href='{0}'><img class='{1}' src='{2}' /></a>".format(g.get_url(), image_class, game_image.replace('{0}{1}'.format(Builder.DATA_DIR, os.sep), ''))
 
             platform_html = ""
-            for platform_data in g.get('platforms'):
-                for platform, data in platform_data.items():
-                    # windows/linux: value = executable
-                    # android: value = google play ID
-                    # flash: value = { :width, :height, :swf }
-                    # silverlight: value = xap file
-                    if 'windows' in platform or 'linux' in platform or 'mac' in platform:
-                        link_target = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
-                    elif 'android' in platform:
-                        link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
-                    elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
-                        link_target = g.get_url()
-                    else:
-                        print("WARNING: Not sure what the link target is for {0}".format(platform))
-                    
-                    ext = ('png' if platform == 'silverlight' else 'svg')
-                    platform_html = "{0}<img src='images/{1}.{2}' width='32' height='32' />".format(platform_html, platform, ext)
+            # Some games have only a custom URL and no platforms; ignore those.
+            if g.has("platforms"):
+                for platform_data in g.get('platforms'):
+                    for platform, data in platform_data.items():
+                        # windows/linux: value = executable
+                        # android: value = google play ID
+                        # flash: value = { :width, :height, :swf }
+                        # silverlight: value = xap file
+                        if 'windows' in platform or 'linux' in platform or 'mac' in platform:
+                            link_target = "{0}/{1}/{2}".format(Builder.GAMES_DIR, platform, data)
+                        elif 'android' in platform:
+                            link_target = "{0}{1}".format(Builder.GOOGLE_PLAY_PATH, data)
+                        elif 'flash' in platform or 'html5' in platform or 'silverlight' in platform:
+                            link_target = g.get_url()
+                        else:
+                            print("WARNING: Not sure what the link target is for {0}".format(platform))
+                        
+                        ext = ('png' if platform == 'silverlight' else 'svg')
+                        platform_html = "{0}<img src='images/{1}.{2}' width='32' height='32' />".format(platform_html, platform, ext)
 
             # Compose final HTML
             final_html = "<div class='col-sm-{0}'>{1}{2}</div>".format(column_size, html, platform_html)
@@ -355,6 +357,8 @@ class Game:
         if self.has("steamAppId"):
             steamAppId = self.get("steamAppId")
             return "{}/{}".format(Builder.STEAM_ROOT_URL, steamAppId)
+        elif self.has("customUrl"):
+            return self.get("customUrl")
         else:
             name = self.get('name')
             name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
