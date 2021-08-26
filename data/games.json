@@ -1,6 +1,12 @@
 {
   "games": [
     {
+      "name": "Blazing Beaks: Easy Duck Mod",
+      "screenshot": "blazing-beaks-easy-duck.png",
+      "published": "2021-08-23",
+      "customUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=2583428025"
+    },
+    {
       "name": "Stardew Valley Easy Mode Store",
       "screenshot": "stardew-valley-easy-mode-store.png",
       "published": "2020-12-27",
