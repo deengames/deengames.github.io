@@ -113,10 +113,14 @@ class Builder:
             # Regardless of extension, add size
             filename = g.get('screenshot')
 
-            game_image = os.path.join(Builder.IMAGES_DIR, filename)
+            game_image = os.path.join(Builder.IMAGES_DIR, filename).replace(os.sep, '/')
             if not os.path.isfile(game_image):
                 raise(Exception("Can't find image {2}/{0} for game {1}".format(g.get('screenshot'), g.get('name'), Builder.IMAGES_DIR)))
-            html = "<a href='{0}'><img class='{1}' src='{2}' /></a>".format(g.get_url(), image_class, game_image.replace('{0}{1}'.format(Builder.DATA_DIR, os.sep), ''))
+            
+            image_url = game_image.replace('{0}{1}'.format(Builder.DATA_DIR, '/'), '')
+            print("image={0}".format(game_image))
+            
+            html = "<a href='{0}'><img class='{1}' src='{2}' /></a>".format(g.get_url(), image_class, image_url)
 
             platform_html = ""
             # Some games have only a custom URL and no platforms; ignore those.
