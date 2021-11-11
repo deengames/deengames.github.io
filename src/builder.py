@@ -118,8 +118,6 @@ class Builder:
                 raise(Exception("Can't find image {2}/{0} for game {1}".format(g.get('screenshot'), g.get('name'), Builder.IMAGES_DIR)))
             
             image_url = game_image.replace('{0}{1}'.format(Builder.DATA_DIR, '/'), '')
-            print("image={0}".format(game_image))
-            
             html = "<a href='{0}'><img class='{1}' src='{2}' /></a>".format(g.get_url(), image_class, image_url)
 
             platform_html = ""
