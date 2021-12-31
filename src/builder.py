@@ -43,6 +43,8 @@ class Builder:
     ITCH_IO_URL_ROOT = 'https://deengames.itch.io'
     STEAM_ROOT_URL = 'https://store.steampowered.com/app'
 
+    _UTM_SOURCE = "deengames.com" # used by Steam
+
     # When scaling images, scale down to this width/height (whatever's smaller)
     # The image width (if a landscape image) is guaranteed to be 250px or less
     # The image height (if a portrait image) is guaranteed to be 250px or less
@@ -356,15 +358,22 @@ class Game:
 
     # return: Quest for the Royal Jelly => quest-for-the-royal-jelly
     def get_url(self):
+        
+        base_url = ""
         if self.has("steamAppId"):
             steamAppId = self.get("steamAppId")
-            return "{}/{}".format(Builder.STEAM_ROOT_URL, steamAppId)
+            base_url = "{}/{}".format(Builder.STEAM_ROOT_URL, steamAppId)
         elif self.has("customUrl"):
-            return self.get("customUrl")
+            base_url = self.get("customUrl")
         else:
             name = self.get('name')
             name = name.replace(' ', '-').replace('_', '-').replace("'", "").lower().strip()
-            return "{}/{}".format(Builder.ITCH_IO_URL_ROOT, name)
+            base_url = "{}/{}".format(Builder.ITCH_IO_URL_ROOT, name)
+        
+        if self.has("utmSource"):
+            base_url = "{}?utm_source={}".format(base_url, Builder._UTM_SOURCE)
+        
+        return base_url
 
     def get_educators_guide_html(self):
         if self.has('educators_guide'):
