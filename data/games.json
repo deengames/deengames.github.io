@@ -1,6 +1,14 @@
 {
   "games": [
     {
+      "name": "Gem World",
+      "screenshot": "gem-world.png",
+      "published": "2021-12-27",
+      "platforms": [ {"windows": true}, {"linux": true} ],
+      "steamAppId": 1858760,
+      "utmSource": true
+    },
+    {
       "name": "Blazing Beaks: Easy Duck Mod",
       "screenshot": "blazing-beaks-easy-duck.png",
       "published": "2021-08-23",
@@ -17,7 +25,8 @@
       "screenshot": "oneons.png",
       "published": "2020-05-12",
       "platforms": [ {"windows": true}, {"linux": true} ],
-      "steamAppId": 1342600
+      "steamAppId": 1342600,
+      "utmSource": true
     },
     {
       "name": "Ali the Android",
