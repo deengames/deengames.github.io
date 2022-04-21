@@ -1,8 +1,8 @@
 {
   "games": [
     {
-      "name": "Gem World",
-      "screenshot": "gem-world.png",
+      "name": "Gem Worlds",
+      "screenshot": "gem-worlds.png",
       "published": "2021-12-27",
       "platforms": [ {"windows": true}, {"linux": true} ],
       "steamAppId": 1858760,
