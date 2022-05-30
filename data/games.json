@@ -1,6 +1,12 @@
 {
   "games": [
     {
+      "name": "Slay the Spire: Persistent Upgrades Mod",
+      "screenshot": "slay-the-spire-persistent-upgrades.png",
+      "published": "2022-05-29",
+      "customUrl": "https://github.com/deengames/slay-the-spire-persistent-upgrades-mod"
+    },
+    {
       "name": "Gem Worlds",
       "screenshot": "gem-worlds.png",
       "published": "2021-12-27",
