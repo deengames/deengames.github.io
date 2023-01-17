@@ -4,7 +4,7 @@
       "name": "Gem Worlds",
       "screenshot": "gem-worlds.png",
       "published": "2023-01-16",
-      "platforms": [ {"windows": true}, {"linux": true} ],
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ],
       "steamAppId": 1858760,
       "utmSource": true
     },
