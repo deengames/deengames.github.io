@@ -1,6 +1,13 @@
 {
   "games": [
     {
+      "name": "Hybrid",
+      "screenshot": "hybrid.png",
+      "published": "2023-04-30",
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ],
+      "customUrl": "https://deengames.itch.io/hybrid"
+    },
+    {
       "name": "Gem Worlds",
       "screenshot": "gem-worlds.png",
       "published": "2023-01-16",
