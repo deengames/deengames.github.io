@@ -1,13 +1,6 @@
 {
   "games": [
     {
-      "name": "Hybrid",
-      "screenshot": "hybrid.png",
-      "published": "2023-04-30",
-      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ],
-      "customUrl": "https://deengames.itch.io/hybrid"
-    },
-    {
       "name": "Gem Worlds",
       "screenshot": "gem-worlds.png",
       "published": "2023-01-16",
@@ -16,18 +9,17 @@
       "utmSource": true
     },
     {
+      "name": "Hybrid",
+      "screenshot": "hybrid.png",
+      "published": "2023-04-30",
+      "platforms": [ {"windows": true}, {"linux": true}, {"mac": true} ],
+      "customUrl": "https://deengames.itch.io/hybrid"
+    },
+    {
       "name": "Slay the Spire: Persistent Upgrades Mod",
       "screenshot": "slay-the-spire-persistent-upgrades.png",
       "published": "2022-05-29",
       "customUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=2814839314"
-    },
-    {
-      "name": "Gem Worlds",
-      "screenshot": "gem-worlds.png",
-      "published": "2021-12-27",
-      "platforms": [ {"windows": true}, {"linux": true} ],
-      "steamAppId": 1858760,
-      "utmSource": true
     },
     {
       "name": "Blazing Beaks: Easy Duck Mod",

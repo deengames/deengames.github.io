@@ -66,7 +66,7 @@ class Builder:
             raise(Exception('JSON structure changed; where is the top-level "games" list?'))
 
         # sort by publication date, reverse chronologically (newest first)
-        json_games.sort(key = lambda x: x["published"], reverse = True)
+        #json_games.sort(key = lambda x: x["published"], reverse = True)
 
         # Convert into Game instances
         self.games = []
