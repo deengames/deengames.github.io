@@ -1,6 +1,7 @@
 {
   "games": [
     {
+      "COMMENT": "PINNED! Manually. Just move it down manually later.",
       "name": "Gem Worlds",
       "screenshot": "gem-worlds.png",
       "published": "2023-01-16",
@@ -8,6 +9,13 @@
       "steamAppId": 1858760,
       "utmSource": true
     },
+    {
+      "name": "Slay the Spire: Diverse Mod",
+      "screenshot": "slay-the-spire-diverse-mod.png",
+      "published": "2023-05-18",
+      "customUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=2986743516"
+    },
+
     {
       "name": "Slay the Spire: Extra Energy Mod",
       "screenshot": "slay-the-spire-extra-energy.png",
