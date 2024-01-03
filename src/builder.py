@@ -1,8 +1,7 @@
-import distutils.dir_util
 import glob
-import io
 import json
 import os
+import setuptools
 import shutil
 import time
 
@@ -87,7 +86,7 @@ class Builder:
         shutil.rmtree(Builder.OUTPUT_DIR, True)
         
         # Copy over CSS, fonts, JS, and the index page, plus site-wide images, etc.
-        distutils.dir_util.copy_tree(Builder.TEMPLATE_DIRECTORY, Builder.OUTPUT_DIR)
+        setuptools.distutils.dir_util.copy_tree(Builder.TEMPLATE_DIRECTORY, Builder.OUTPUT_DIR)
         for exclusion in Builder.TEMPLATE_EXCLUSIONS:                
             shutil.rmtree(os.path.join(Builder.OUTPUT_DIR, exclusion), True)
 
@@ -170,7 +169,7 @@ class Builder:
         html = file_io.read(os.path.join(Builder.OUTPUT_DIR, Builder.INDEX_PAGE))
         html = self.master_page_html.replace(Builder.CONTENT_PLACEHOLDER, "{0}{1}".format(featured_html, regular_html)).replace('@title', 'Home')
         file_io.write(os.path.join(Builder.OUTPUT_DIR, Builder.INDEX_PAGE), html)
-        distutils.dir_util.copy_tree(os.path.join(Builder.IMAGES_DIR, "."), os.path.join(Builder.OUTPUT_DIR, "images"))
+        setuptools.distutils.dir_util.copy_tree(os.path.join(Builder.IMAGES_DIR, "."), os.path.join(Builder.OUTPUT_DIR, "images"))
 
     # Generates static pages from data/static_pages/*.md
     # Converts them into HTML, links them in the header
